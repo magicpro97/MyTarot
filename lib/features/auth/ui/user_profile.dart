@@ -7,12 +7,12 @@ import 'package:my_tarot/features/auth/ui/widget/user_summary_info.dart';
 
 import 'bloc/bloc.dart';
 
-class UserDrawer extends StatelessWidget {
+class UserProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final authBloc = GetIt.I<AuthBloc>();
 
-    return Drawer(
+    return Container(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 8.0),
         child: BlocBuilder<AuthBloc, AuthState>(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_tarot/features/home/home_page.dart';
+import 'package:my_tarot/features/home/ui/home_page.dart';
 
 class App extends StatelessWidget {
   @override

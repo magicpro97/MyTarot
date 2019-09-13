@@ -1,43 +1,52 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:my_tarot/features/auth/ui/user_drawer.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:my_tarot/features/auth/ui/user_profile.dart';
 import 'package:my_tarot/features/detail/detail_page.dart';
-import 'package:my_tarot/features/shared/widgets/tarot_card.dart';
+import 'package:my_tarot/features/home/ui/widgets/card_list.dart';
 import 'package:my_tarot/models/tarot.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
+    final unselectedLabelColor = Colors.black;
+    final selectedLabelColors = Colors.blue;
 
-    /*24 is for notification bar on Android*/
-    final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
-    final double itemWidth = size.width / 2;
+    return DefaultTabController(
+      child: Scaffold(
+        appBar: _buildAppBar(),
+        body: _buildTabView(context),
+        bottomNavigationBar: TabBar(
+          labelColor: selectedLabelColors,
+          unselectedLabelColor: unselectedLabelColor,
+          tabs: <Widget>[
+            Tab(
+              icon: Icon(FontAwesomeIcons.creditCard),
+            ),
+            Tab(
+              icon: Icon(Icons.person_outline),
+            ),
+          ],
+        ),
+      ),
+      length: 2,
+    );
+  }
 
+  TabBarView _buildTabView(BuildContext context) {
+    return TabBarView(children: <Widget>[
+      CardList(),
+      UserProfile(),
+    ]);
+  }
+
+  AppBar _buildAppBar() {
     final tarotSnapshot = Firestore.instance.collection('tarot').snapshots();
 
-    return Scaffold(
-      drawer: UserDrawer(),
-      appBar: AppBar(
-        title: Text("My Tarrot"),
-        actions: <Widget>[
-          StreamBuilder<QuerySnapshot>(
-              stream: tarotSnapshot,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) return CircularProgressIndicator();
-
-                final tarots = snapshot.data.documents
-                    .map((doc) => Tarot.fromSnapshot(doc))
-                    .toList();
-                return IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: () => showSearch(
-                        context: context, delegate: CardSearch(items: tarots)));
-              }),
-        ],
-      ),
-      body: Container(
-        child: StreamBuilder<QuerySnapshot>(
+    return AppBar(
+      title: Text("My Tarrot"),
+      actions: <Widget>[
+        StreamBuilder<QuerySnapshot>(
             stream: tarotSnapshot,
             builder: (context, snapshot) {
               if (!snapshot.hasData) return LinearProgressIndicator();
@@ -45,26 +54,12 @@ class HomePage extends StatelessWidget {
               final tarots = snapshot.data.documents
                   .map((doc) => Tarot.fromSnapshot(doc))
                   .toList();
-
-              final tarotCards = tarots
-                  .map(
-                    (tarot) => GestureDetector(
-                  child: TarotCard(
-                    tarot: tarot,
-                  ),
-                  onTap: () => _goToDetailPage(context, tarot),
-                ),
-              )
-                  .toList();
-
-              return GridView.count(
-                childAspectRatio: (itemWidth / itemHeight),
-                shrinkWrap: true,
-                crossAxisCount: 2,
-                children: tarotCards,
-              );
+              return IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () => showSearch(
+                      context: context, delegate: CardSearch(items: tarots)));
             }),
-      ),
+      ],
     );
   }
 }
