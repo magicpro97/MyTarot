@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:my_tarot/features/auth/ui/user_drawer.dart';
 import 'package:my_tarot/features/detail/detail_page.dart';
 import 'package:my_tarot/features/shared/widgets/tarot_card.dart';
 import 'package:my_tarot/models/tarot.dart';
@@ -16,6 +17,7 @@ class HomePage extends StatelessWidget {
     final tarotSnapshot = Firestore.instance.collection('tarot').snapshots();
 
     return Scaffold(
+      drawer: UserDrawer(),
       appBar: AppBar(
         title: Text("My Tarrot"),
         actions: <Widget>[
@@ -47,12 +49,12 @@ class HomePage extends StatelessWidget {
               final tarotCards = tarots
                   .map(
                     (tarot) => GestureDetector(
-                      child: TarotCard(
-                        tarot: tarot,
-                      ),
-                      onTap: () => _goToDetailPage(context, tarot),
-                    ),
-                  )
+                  child: TarotCard(
+                    tarot: tarot,
+                  ),
+                  onTap: () => _goToDetailPage(context, tarot),
+                ),
+              )
                   .toList();
 
               return GridView.count(

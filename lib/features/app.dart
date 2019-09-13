@@ -7,8 +7,10 @@ class App extends StatelessWidget {
     return MaterialApp(
       title: 'My Tarot',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+          primarySwatch: Colors.blue,
+          buttonTheme: ButtonThemeData(
+            textTheme: ButtonTextTheme.primary,
+          )),
       home: HomePage(),
     );
   }
