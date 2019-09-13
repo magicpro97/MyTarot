@@ -13,7 +13,7 @@ class GoogleAuth {
   Future<GoogleSignInAccount> getSignedInAccount() async {
     GoogleSignInAccount account = _googleSignIn.currentUser;
     if (account == null) {
-      account = await _googleSignIn.signInSilently();
+      account = await _googleSignIn.signIn();
     }
     return account;
   }
