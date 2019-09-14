@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:my_tarot/features/detail/detail_page.dart';
+import 'package:my_tarot/features/detail/ui/detail_page.dart';
 import 'package:my_tarot/features/shared/widgets/tarot_card.dart';
 import 'package:my_tarot/models/tarot.dart';
 
@@ -27,12 +27,12 @@ class CardList extends StatelessWidget {
             final tarotCards = tarots
                 .map(
                   (tarot) => GestureDetector(
-                child: TarotCard(
-                  tarot: tarot,
-                ),
-                onTap: () => _goToDetailPage(context, tarot),
-              ),
-            )
+                    child: TarotCard(
+                      tarot: tarot,
+                    ),
+                    onTap: () => _goToDetailPage(context, tarot),
+                  ),
+                )
                 .toList();
 
             return GridView.count(
@@ -49,6 +49,6 @@ class CardList extends StatelessWidget {
       context,
       MaterialPageRoute(
           builder: (context) => DetailPage(
-            tarot: tarot,
-          )));
+                tarot: tarot,
+              )));
 }

@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_tarot/features/auth/ui/user_profile.dart';
-import 'package:my_tarot/features/detail/detail_page.dart';
+import 'package:my_tarot/features/detail/ui/detail_page.dart';
 import 'package:my_tarot/features/home/ui/widgets/card_list.dart';
 import 'package:my_tarot/models/tarot.dart';
 

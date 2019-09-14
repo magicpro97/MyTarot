@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_tarot/features/detail/ui/widget/note_tarot_button.dart';
 import 'package:my_tarot/features/shared/widgets/tarot_card_detail.dart';
 import 'package:my_tarot/models/tarot.dart';
 
@@ -16,6 +17,7 @@ class DetailPage extends StatelessWidget {
       body: TarotCardDetail(
         tarot: tarot,
       ),
+      floatingActionButton: NoteTarotButton(),
     );
   }
 }
