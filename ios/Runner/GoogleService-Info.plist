@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>963938736817-5u7rksqebsm52kavkdo6ved76rlhgr17.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.963938736817-5u7rksqebsm52kavkdo6ved76rlhgr17</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>963938736817-cevo4hni3ogpcf6vur45gmb6g6qcjqcr.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBStRgWhTx-wxIZnhFwrYTfw4Du7Sd4B5M</string>
+	<key>GCM_SENDER_ID</key>
+	<string>963938736817</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>magicpro97.xyz.myTarot</string>
+	<key>PROJECT_ID</key>
+	<string>my-tarrot</string>
+	<key>STORAGE_BUCKET</key>
+	<string>my-tarrot.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:963938736817:ios:05b11d2e1632d45b02e090</string>
+	<key>DATABASE_URL</key>
+	<string>https://my-tarrot.firebaseio.com</string>
+</dict>
+</plist>
