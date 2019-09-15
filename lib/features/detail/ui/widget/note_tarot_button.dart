@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:my_tarot/features/detail/ui/bloc/bloc.dart';
 
 class NoteTarotButton extends StatelessWidget {
@@ -11,7 +12,7 @@ class NoteTarotButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final titleStyle = Theme.of(context).textTheme.title;
     final textFocusNote = FocusNode();
-    final detailBloc = DetailBloc();
+    final detailBloc = GetIt.I<DetailBloc>();
 
     return BlocBuilder(
       bloc: detailBloc,
@@ -20,11 +21,11 @@ class NoteTarotButton extends StatelessWidget {
             stream: detailBloc.noteStateStream,
             builder: (context, snapshot) {
               if (!snapshot.hasData) return Icon(Icons.note);
+
               return snapshot.data ? Icon(Icons.save) : Icon(Icons.note);
             }),
         onPressed: () {
           if (detailBloc.isNoteOpen) {
-            print("CLOSED");
             detailBloc.dispatch(CloseNote());
           } else {
             final bottomSheetController = showBottomSheet(
@@ -50,7 +51,6 @@ class NoteTarotButton extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: TextFormField(
-                              onTap: () => print(detailBloc.isNoteOpen),
                               decoration: InputDecoration(
                                   hintText: "Type something here..."),
                               focusNode: textFocusNote,

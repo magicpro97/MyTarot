@@ -49,7 +49,7 @@ class HomePage extends StatelessWidget {
         StreamBuilder<QuerySnapshot>(
             stream: tarotSnapshot,
             builder: (context, snapshot) {
-              if (!snapshot.hasData) return LinearProgressIndicator();
+              if (!snapshot.hasData) return Container();
 
               final tarots = snapshot.data.documents
                   .map((doc) => Tarot.fromSnapshot(doc))

@@ -24,12 +24,21 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
     DetailEvent event,
   ) async* {
     if (event is OpenNote) {
-      _bottomSheetController = event.bottomSheetController;
-      updateNoteState(true);
+      _openNoteSheetHandler(event);
     } else if (event is CloseNote) {
-      _bottomSheetController.close();
-      updateNoteState(false);
+      _closeNoteSheetHandler();
     }
+  }
+
+  void _closeNoteSheetHandler() {
+    _bottomSheetController.close();
+    updateNoteState(false);
+    _bottomSheetController = null;
+  }
+
+  void _openNoteSheetHandler(OpenNote event) {
+    _bottomSheetController = event.bottomSheetController;
+    updateNoteState(true);
   }
 
   @override
