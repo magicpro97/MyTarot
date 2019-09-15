@@ -30,12 +30,11 @@ class NoteTarotButton extends StatelessWidget {
           } else {
             final bottomSheetController = showBottomSheet(
                 context: context,
-                builder: (context) =>
-                    Container(
+                builder: (context) => Container(
                       decoration: BoxDecoration(
                         color: Colors.blue,
                         borderRadius:
-                        BorderRadius.vertical(top: Radius.circular(32.0)),
+                            BorderRadius.vertical(top: Radius.circular(32.0)),
                       ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
