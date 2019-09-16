@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:json_annotation/json_annotation.dart';
+//import 'package:json_annotation/json_annotation.dart';
 
-part 'tarot.g.dart';
+// part 'tarot.g.dart';
 
-@JsonSerializable()
+//@JsonSerializable()
 class Tarot {
   final String name;
   final String description;
@@ -12,12 +12,12 @@ class Tarot {
 
   Tarot({this.name, this.description, this.imageUrl, this.reference});
 
-  factory Tarot.fromJson(
-    Map<String, dynamic> json,
-  ) =>
-      _$TarotFromJson(json);
+  // factory Tarot.fromJson(
+  //   Map<String, dynamic> json,
+  // ) =>
+  //     _$TarotFromJson(json);
 
-  Map<String, dynamic> toJson() => _$TarotToJson(this);
+  // Map<String, dynamic> toJson() => _$TarotToJson(this);
 
   Tarot.fromMap(Map<String, dynamic> map, {this.reference})
       : name = map['name'],
