@@ -14,25 +14,24 @@ class NoteTarotButton extends StatelessWidget {
 
     return BlocBuilder(
       bloc: detailBloc,
-      builder: (context, state) =>
-          StreamBuilder<bool>(
-              stream: detailBloc.noteStateStream,
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) return Container();
-                return FloatingActionButton(
-                  child: snapshot.data ? Icon(Icons.save) : Icon(Icons.note),
-                  tooltip: snapshot.data ? "Save" : "Open",
-                  onPressed: () {
-                    if (detailBloc.isNoteOpen) {
-                      detailBloc.dispatch(CloseNote());
-                    } else {
-                      final bottomSheetController = showBottomSheet(
-                          context: context, builder: (context) => NoteSheet());
-                      detailBloc.dispatch(OpenNote(bottomSheetController));
-                    }
-                  },
-                );
-              }),
+      builder: (context, state) => StreamBuilder<bool>(
+          stream: detailBloc.noteStateStream,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return Container();
+            return FloatingActionButton(
+              child: snapshot.data ? Icon(Icons.save) : Icon(Icons.note),
+              tooltip: snapshot.data ? "Save" : "Open",
+              onPressed: () {
+                if (detailBloc.isNoteOpen) {
+                  detailBloc.dispatch(CloseNote());
+                } else {
+                  final bottomSheetController = showBottomSheet(
+                      context: context, builder: (context) => NoteSheet());
+                  detailBloc.dispatch(OpenNote(bottomSheetController));
+                }
+              },
+            );
+          }),
     );
   }
 }
@@ -44,10 +43,7 @@ class NoteSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final titleStyle = Theme
-        .of(context)
-        .textTheme
-        .title;
+    final titleStyle = Theme.of(context).textTheme.title;
     final textFocusNote = FocusNode();
 
     return Container(
