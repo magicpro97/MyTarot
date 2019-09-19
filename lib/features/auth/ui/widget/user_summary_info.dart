@@ -15,7 +15,7 @@ class UserSummaryInfo extends StatelessWidget {
     final theme = Theme.of(context);
     final displayNameStyle = theme.textTheme.title;
     final emailStyle = theme.textTheme.caption;
-    final buttonTextStyle = theme.textTheme.button;
+    //final buttonTextStyle = theme.textTheme.button;
 
     return Container(
       width: double.infinity,

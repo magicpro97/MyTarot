@@ -30,7 +30,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with TarotTransformer {
   ) async* {
     print(event.toString());
     if (event is InitDataEvent) {
-      print("InitDataEvent");
       await _initData();
       yield LoadedState();
     }
