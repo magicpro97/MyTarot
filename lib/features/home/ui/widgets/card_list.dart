@@ -1,13 +1,15 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:my_tarot/features/detail/ui/detail_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:my_tarot/data/tranformers/tarot_tranformer.dart';
+import 'package:my_tarot/features/home/ui/bloc/bloc.dart';
 import 'package:my_tarot/features/shared/widgets/tarot_card.dart';
-import 'package:my_tarot/models/tarot.dart';
 
-class CardList extends StatelessWidget {
+class CardList extends StatelessWidget with TarotTransformer {
   @override
   Widget build(BuildContext context) {
-    final tarotSnapshot = Firestore.instance.collection('tarot').snapshots();
+    final homeBloc = GetIt.I<HomeBloc>();
+
     var size = MediaQuery.of(context).size;
 
     /*24 is for notification bar on Android*/
@@ -15,40 +17,32 @@ class CardList extends StatelessWidget {
     final double itemWidth = size.width / 2;
 
     return Container(
-      child: StreamBuilder<QuerySnapshot>(
-          stream: tarotSnapshot,
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) return LinearProgressIndicator();
+      child: BlocBuilder(
+        bloc: homeBloc,
+        builder: (BuildContext context, HomeState state) =>
+            StreamBuilder<List<TarotCard>>(
+                stream:
+                homeBloc.tarotListStream.transform(tarotCardListTransform),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    if (state is InitialHomeBlocState) {
+                      homeBloc.dispatch(InitDataEvent());
+                    }
+                    return LinearProgressIndicator();
+                  }
+                  if (snapshot.hasError) {
+                    print(snapshot.error);
+                  }
+                  final tarotCards = snapshot.data;
 
-            final tarots = snapshot.data.documents
-                .map((doc) => Tarot.fromSnapshot(doc))
-                .toList();
-
-            final tarotCards = tarots
-                .map(
-                  (tarot) => GestureDetector(
-                    child: TarotCard(
-                      tarot: tarot,
-                    ),
-                    onTap: () => _goToDetailPage(context, tarot),
-                  ),
-                )
-                .toList();
-
-            return GridView.count(
-              childAspectRatio: (itemWidth / itemHeight),
-              shrinkWrap: true,
-              crossAxisCount: 2,
-              children: tarotCards,
-            );
-          }),
+                  return GridView.count(
+                    childAspectRatio: (itemWidth / itemHeight),
+                    shrinkWrap: true,
+                    crossAxisCount: 2,
+                    children: tarotCards,
+                  );
+                }),
+      ),
     );
   }
-
-  Future _goToDetailPage(BuildContext context, Tarot tarot) => Navigator.push(
-      context,
-      MaterialPageRoute(
-          builder: (context) => DetailPage(
-                tarot: tarot,
-              )));
 }

@@ -7,3 +7,7 @@ abstract class HomeEvent extends Equatable {
 }
 
 class CheckingNetworkEvent extends HomeEvent {}
+
+class LoadMoreEvent extends HomeEvent {}
+
+class InitDataEvent extends HomeEvent {}

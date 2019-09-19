@@ -52,7 +52,7 @@ class HomePage extends StatelessWidget {
               if (!snapshot.hasData) return Container();
 
               final tarots = snapshot.data.documents
-                  .map((doc) => Tarot.fromSnapshot(doc))
+                  .map((doc) => Tarot.fromJson(doc.data))
                   .toList();
               return IconButton(
                   icon: Icon(Icons.search),

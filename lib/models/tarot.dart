@@ -1,29 +1,27 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-//import 'package:json_annotation/json_annotation.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-// part 'tarot.g.dart';
+part 'tarot.g.dart';
 
-//@JsonSerializable()
+@JsonSerializable()
 class Tarot {
   final String name;
   final String description;
   final String imageUrl;
-  final DocumentReference reference;
 
-  Tarot({this.name, this.description, this.imageUrl, this.reference});
+  //final DocumentReference reference;
 
-  // factory Tarot.fromJson(
-  //   Map<String, dynamic> json,
-  // ) =>
-  //     _$TarotFromJson(json);
+  Tarot({this.name, this.description, this.imageUrl});
 
-  // Map<String, dynamic> toJson() => _$TarotToJson(this);
+  factory Tarot.fromJson(Map<String, dynamic> json,) =>
+      _$TarotFromJson(json);
 
-  Tarot.fromMap(Map<String, dynamic> map, {this.reference})
-      : name = map['name'],
-        description = map['description'],
-        imageUrl = map['imageUrl'];
+  Map<String, dynamic> toJson() => _$TarotToJson(this);
 
-  Tarot.fromSnapshot(DocumentSnapshot snapshot)
-      : this.fromMap(snapshot.data, reference: snapshot.reference);
+//  Tarot.fromMap(Map<String, dynamic> map, {this.reference})
+//      : name = map['name'],
+//        description = map['description'],
+//        imageUrl = map['imageUrl'];
+//
+//  Tarot.fromSnapshot(DocumentSnapshot snapshot)
+//      : this.fromMap(snapshot.data, reference: snapshot.reference);
 }
