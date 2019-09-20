@@ -45,9 +45,10 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with TarotTransformer {
     await Firestore.instance
         .collection('tarot')
         .orderBy('name')
-        .limit(6)
         .snapshots()
         .transform(tarotListTransform)
         .pipe(_tarotListController);
+//        .transform(tarotTblDataTransform)
+//        .listen((data) async => await localDb.tarotDao.insertTarots(data));
   }
 }
