@@ -248,12 +248,257 @@ class $TarotTableTable extends TarotTable
   }
 }
 
+class NoteTableData extends DataClass implements Insertable<NoteTableData> {
+  final String id;
+  final String tarotId;
+  final String userId;
+  final String content;
+  NoteTableData(
+      {@required this.id,
+      @required this.tarotId,
+      @required this.userId,
+      @required this.content});
+  factory NoteTableData.fromData(
+      Map<String, dynamic> data, GeneratedDatabase db,
+      {String prefix}) {
+    final effectivePrefix = prefix ?? '';
+    final stringType = db.typeSystem.forDartType<String>();
+    return NoteTableData(
+      id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
+      tarotId: stringType
+          .mapFromDatabaseResponse(data['${effectivePrefix}tarot_id']),
+      userId:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}user_id']),
+      content:
+          stringType.mapFromDatabaseResponse(data['${effectivePrefix}content']),
+    );
+  }
+  factory NoteTableData.fromJson(Map<String, dynamic> json,
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return NoteTableData(
+      id: serializer.fromJson<String>(json['id']),
+      tarotId: serializer.fromJson<String>(json['tarotId']),
+      userId: serializer.fromJson<String>(json['userId']),
+      content: serializer.fromJson<String>(json['content']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson(
+      {ValueSerializer serializer = const ValueSerializer.defaults()}) {
+    return {
+      'id': serializer.toJson<String>(id),
+      'tarotId': serializer.toJson<String>(tarotId),
+      'userId': serializer.toJson<String>(userId),
+      'content': serializer.toJson<String>(content),
+    };
+  }
+
+  @override
+  T createCompanion<T extends UpdateCompanion<NoteTableData>>(
+      bool nullToAbsent) {
+    return NoteTableCompanion(
+      id: id == null && nullToAbsent ? const Value.absent() : Value(id),
+      tarotId: tarotId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(tarotId),
+      userId:
+          userId == null && nullToAbsent ? const Value.absent() : Value(userId),
+      content: content == null && nullToAbsent
+          ? const Value.absent()
+          : Value(content),
+    ) as T;
+  }
+
+  NoteTableData copyWith(
+          {String id, String tarotId, String userId, String content}) =>
+      NoteTableData(
+        id: id ?? this.id,
+        tarotId: tarotId ?? this.tarotId,
+        userId: userId ?? this.userId,
+        content: content ?? this.content,
+      );
+  @override
+  String toString() {
+    return (StringBuffer('NoteTableData(')
+          ..write('id: $id, ')
+          ..write('tarotId: $tarotId, ')
+          ..write('userId: $userId, ')
+          ..write('content: $content')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => $mrjf($mrjc(id.hashCode,
+      $mrjc(tarotId.hashCode, $mrjc(userId.hashCode, content.hashCode))));
+  @override
+  bool operator ==(other) =>
+      identical(this, other) ||
+      (other is NoteTableData &&
+          other.id == id &&
+          other.tarotId == tarotId &&
+          other.userId == userId &&
+          other.content == content);
+}
+
+class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
+  final Value<String> id;
+  final Value<String> tarotId;
+  final Value<String> userId;
+  final Value<String> content;
+  const NoteTableCompanion({
+    this.id = const Value.absent(),
+    this.tarotId = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.content = const Value.absent(),
+  });
+  NoteTableCompanion copyWith(
+      {Value<String> id,
+      Value<String> tarotId,
+      Value<String> userId,
+      Value<String> content}) {
+    return NoteTableCompanion(
+      id: id ?? this.id,
+      tarotId: tarotId ?? this.tarotId,
+      userId: userId ?? this.userId,
+      content: content ?? this.content,
+    );
+  }
+}
+
+class $NoteTableTable extends NoteTable
+    with TableInfo<$NoteTableTable, NoteTableData> {
+  final GeneratedDatabase _db;
+  final String _alias;
+  $NoteTableTable(this._db, [this._alias]);
+  final VerificationMeta _idMeta = const VerificationMeta('id');
+  GeneratedTextColumn _id;
+  @override
+  GeneratedTextColumn get id => _id ??= _constructId();
+  GeneratedTextColumn _constructId() {
+    return GeneratedTextColumn(
+      'id',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _tarotIdMeta = const VerificationMeta('tarotId');
+  GeneratedTextColumn _tarotId;
+  @override
+  GeneratedTextColumn get tarotId => _tarotId ??= _constructTarotId();
+  GeneratedTextColumn _constructTarotId() {
+    return GeneratedTextColumn(
+      'tarot_id',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  GeneratedTextColumn _userId;
+  @override
+  GeneratedTextColumn get userId => _userId ??= _constructUserId();
+  GeneratedTextColumn _constructUserId() {
+    return GeneratedTextColumn(
+      'user_id',
+      $tableName,
+      false,
+    );
+  }
+
+  final VerificationMeta _contentMeta = const VerificationMeta('content');
+  GeneratedTextColumn _content;
+  @override
+  GeneratedTextColumn get content => _content ??= _constructContent();
+  GeneratedTextColumn _constructContent() {
+    return GeneratedTextColumn(
+      'content',
+      $tableName,
+      false,
+    );
+  }
+
+  @override
+  List<GeneratedColumn> get $columns => [id, tarotId, userId, content];
+  @override
+  $NoteTableTable get asDslTable => this;
+  @override
+  String get $tableName => _alias ?? 'note_table';
+  @override
+  final String actualTableName = 'note_table';
+  @override
+  VerificationContext validateIntegrity(NoteTableCompanion d,
+      {bool isInserting = false}) {
+    final context = VerificationContext();
+    if (d.id.present) {
+      context.handle(_idMeta, id.isAcceptableValue(d.id.value, _idMeta));
+    } else if (id.isRequired && isInserting) {
+      context.missing(_idMeta);
+    }
+    if (d.tarotId.present) {
+      context.handle(_tarotIdMeta,
+          tarotId.isAcceptableValue(d.tarotId.value, _tarotIdMeta));
+    } else if (tarotId.isRequired && isInserting) {
+      context.missing(_tarotIdMeta);
+    }
+    if (d.userId.present) {
+      context.handle(
+          _userIdMeta, userId.isAcceptableValue(d.userId.value, _userIdMeta));
+    } else if (userId.isRequired && isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (d.content.present) {
+      context.handle(_contentMeta,
+          content.isAcceptableValue(d.content.value, _contentMeta));
+    } else if (content.isRequired && isInserting) {
+      context.missing(_contentMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => <GeneratedColumn>{};
+  @override
+  NoteTableData map(Map<String, dynamic> data, {String tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : null;
+    return NoteTableData.fromData(data, _db, prefix: effectivePrefix);
+  }
+
+  @override
+  Map<String, Variable> entityToSql(NoteTableCompanion d) {
+    final map = <String, Variable>{};
+    if (d.id.present) {
+      map['id'] = Variable<String, StringType>(d.id.value);
+    }
+    if (d.tarotId.present) {
+      map['tarot_id'] = Variable<String, StringType>(d.tarotId.value);
+    }
+    if (d.userId.present) {
+      map['user_id'] = Variable<String, StringType>(d.userId.value);
+    }
+    if (d.content.present) {
+      map['content'] = Variable<String, StringType>(d.content.value);
+    }
+    return map;
+  }
+
+  @override
+  $NoteTableTable createAlias(String alias) {
+    return $NoteTableTable(_db, alias);
+  }
+}
+
 abstract class _$MoorDb extends GeneratedDatabase {
   _$MoorDb(QueryExecutor e) : super(const SqlTypeSystem.withDefaults(), e);
   $TarotTableTable _tarotTable;
   $TarotTableTable get tarotTable => _tarotTable ??= $TarotTableTable(this);
+  $NoteTableTable _noteTable;
+  $NoteTableTable get noteTable => _noteTable ??= $NoteTableTable(this);
   TarotDao _tarotDao;
   TarotDao get tarotDao => _tarotDao ??= TarotDao(this as MoorDb);
+  NoteDao _noteDao;
+  NoteDao get noteDao => _noteDao ??= NoteDao(this as MoorDb);
   @override
-  List<TableInfo> get allTables => [tarotTable];
+  List<TableInfo> get allTables => [tarotTable, noteTable];
 }

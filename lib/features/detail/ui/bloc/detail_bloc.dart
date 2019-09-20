@@ -2,19 +2,26 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:my_tarot/data/repositories/local/moor_db.dart';
 import 'package:rxdart/rxdart.dart';
 
 import './bloc.dart';
 
 class DetailBloc extends Bloc<DetailEvent, DetailState> {
-  final _noteTarotStateController = BehaviorSubject<bool>.seeded(false);
+  final localDb = GetIt.I<MoorDb>();
+  final _noteSheetController = BehaviorSubject<bool>.seeded(false);
+  final _noteController = BehaviorSubject<String>();
   PersistentBottomSheetController _bottomSheetController;
 
-  bool get isNoteOpen => _noteTarotStateController.value;
+  bool get isSheetOpen => _noteSheetController.value;
+  String get content => _noteController.value;
 
-  Function get updateNoteState => _noteTarotStateController.add;
+  Function get updateSheetState => _noteSheetController.add;
+  Function get updateNote => _noteController.add;
 
-  Stream<bool> get noteStateStream => _noteTarotStateController.stream;
+  Stream<bool> get sheetStateStream => _noteSheetController.stream;
+  Stream<String> get noteStream => _noteController.stream;
 
   @override
   DetailState get initialState => InitialDetailState();
@@ -31,19 +38,21 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
   }
 
   void _closeNoteSheetHandler() {
+
     _bottomSheetController.close();
-    updateNoteState(false);
+    updateSheetState(false);
     _bottomSheetController = null;
   }
 
   void _openNoteSheetHandler(OpenNote event) {
     _bottomSheetController = event.bottomSheetController;
-    updateNoteState(true);
+    updateSheetState(true);
   }
 
   @override
   void dispose() {
-    _noteTarotStateController.close();
+    _noteSheetController.close();
+    _noteController.close();
     super.dispose();
   }
 }

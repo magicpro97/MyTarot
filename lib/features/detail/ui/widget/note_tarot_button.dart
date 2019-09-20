@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -15,14 +16,14 @@ class NoteTarotButton extends StatelessWidget {
     return BlocBuilder(
       bloc: detailBloc,
       builder: (context, state) => StreamBuilder<bool>(
-          stream: detailBloc.noteStateStream,
+          stream: detailBloc.sheetStateStream,
           builder: (context, snapshot) {
             if (!snapshot.hasData) return Container();
             return FloatingActionButton(
               child: snapshot.data ? Icon(Icons.save) : Icon(Icons.note),
               tooltip: snapshot.data ? "Save" : "Open",
               onPressed: () {
-                if (detailBloc.isNoteOpen) {
+                if (detailBloc.isSheetOpen) {
                   detailBloc.dispatch(CloseNote());
                 } else {
                   final bottomSheetController = showBottomSheet(
@@ -43,35 +44,41 @@ class NoteSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final detailBloc = GetIt.I<DetailBloc>();
     final titleStyle = Theme.of(context).textTheme.title;
     final textFocusNote = FocusNode();
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.blue,
-        borderRadius: BorderRadius.vertical(top: Radius.circular(32.0)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(
-                left: 8.0, right: 8.0, top: 24.0, bottom: 8.0),
-            child: Text(
-              "Say your thinking about the card:",
-              style: titleStyle,
+    return BlocBuilder(
+      bloc: detailBloc,
+      builder: (context, state) => Container(
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(32.0)),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.only(
+                  left: 8.0, right: 8.0, top: 24.0, bottom: 8.0),
+              child: Text(
+                "Say your thinking about the card:",
+                style: titleStyle,
+              ),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextFormField(
-              decoration: InputDecoration(hintText: "Type something here..."),
-              focusNode: textFocusNote,
-              minLines: 3,
-              maxLines: 6,
-            ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                initialValue: detailBloc.content,
+                decoration: InputDecoration(hintText: "Type something here..."),
+                focusNode: textFocusNote,
+                minLines: 3,
+                maxLines: 6,
+                onChanged: (value) => detailBloc.updateNote(value),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -11,11 +11,11 @@ import 'package:my_tarot/features/home/ui/bloc/bloc.dart';
 import 'features/auth/auth.dart';
 
 void main() {
+  GetIt.I.registerSingleton(MoorDb());
   GetIt.I.registerSingleton(Auth());
   GetIt.I.registerSingleton(GoogleAuth());
   GetIt.I.registerSingleton(AuthBloc());
   GetIt.I.registerSingleton(DetailBloc());
-  GetIt.I.registerSingleton(MoorDb());
   GetIt.I.registerSingleton(HomeBloc());
   GetIt.I.registerSingleton(Connectivity());
   runApp(App());
