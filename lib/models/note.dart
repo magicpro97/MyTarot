@@ -7,9 +7,10 @@ part 'note.g.dart';
 class Note extends Equatable {
   final String id;
   final String tarotId;
+  final String userId;
   final String content;
 
-  Note({this.id, this.tarotId, this.content});
+  Note({this.id, this.tarotId, this.userId, this.content});
 
   factory Note.fromJson(Map<String, dynamic> json) => _$NoteFromJson(json);
 
