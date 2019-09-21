@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
+import 'package:my_tarot/models/tarot.dart';
 
 @immutable
 abstract class DetailEvent extends Equatable {
@@ -10,7 +11,9 @@ abstract class DetailEvent extends Equatable {
 class OpenNote extends DetailEvent {
   final PersistentBottomSheetController bottomSheetController;
 
-  OpenNote(this.bottomSheetController);
+  final Tarot tarot;
+
+  OpenNote(this.bottomSheetController, this.tarot);
 }
 
 class CloseNote extends DetailEvent {}

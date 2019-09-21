@@ -12,11 +12,13 @@ class TarotTableData extends DataClass implements Insertable<TarotTableData> {
   final String name;
   final String imageUrl;
   final String description;
+  final String note;
   TarotTableData(
       {@required this.id,
       @required this.name,
       @required this.imageUrl,
-      this.description});
+      this.description,
+      this.note});
   factory TarotTableData.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
@@ -29,6 +31,7 @@ class TarotTableData extends DataClass implements Insertable<TarotTableData> {
           .mapFromDatabaseResponse(data['${effectivePrefix}image_url']),
       description: stringType
           .mapFromDatabaseResponse(data['${effectivePrefix}description']),
+      note: stringType.mapFromDatabaseResponse(data['${effectivePrefix}note']),
     );
   }
   factory TarotTableData.fromJson(Map<String, dynamic> json,
@@ -38,6 +41,7 @@ class TarotTableData extends DataClass implements Insertable<TarotTableData> {
       name: serializer.fromJson<String>(json['name']),
       imageUrl: serializer.fromJson<String>(json['imageUrl']),
       description: serializer.fromJson<String>(json['description']),
+      note: serializer.fromJson<String>(json['note']),
     );
   }
   @override
@@ -48,6 +52,7 @@ class TarotTableData extends DataClass implements Insertable<TarotTableData> {
       'name': serializer.toJson<String>(name),
       'imageUrl': serializer.toJson<String>(imageUrl),
       'description': serializer.toJson<String>(description),
+      'note': serializer.toJson<String>(note),
     };
   }
 
@@ -63,16 +68,22 @@ class TarotTableData extends DataClass implements Insertable<TarotTableData> {
       description: description == null && nullToAbsent
           ? const Value.absent()
           : Value(description),
+      note: note == null && nullToAbsent ? const Value.absent() : Value(note),
     ) as T;
   }
 
   TarotTableData copyWith(
-          {String id, String name, String imageUrl, String description}) =>
+          {String id,
+          String name,
+          String imageUrl,
+          String description,
+          String note}) =>
       TarotTableData(
         id: id ?? this.id,
         name: name ?? this.name,
         imageUrl: imageUrl ?? this.imageUrl,
         description: description ?? this.description,
+        note: note ?? this.note,
       );
   @override
   String toString() {
@@ -80,14 +91,19 @@ class TarotTableData extends DataClass implements Insertable<TarotTableData> {
           ..write('id: $id, ')
           ..write('name: $name, ')
           ..write('imageUrl: $imageUrl, ')
-          ..write('description: $description')
+          ..write('description: $description, ')
+          ..write('note: $note')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(id.hashCode,
-      $mrjc(name.hashCode, $mrjc(imageUrl.hashCode, description.hashCode))));
+  int get hashCode => $mrjf($mrjc(
+      id.hashCode,
+      $mrjc(
+          name.hashCode,
+          $mrjc(
+              imageUrl.hashCode, $mrjc(description.hashCode, note.hashCode)))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
@@ -95,7 +111,8 @@ class TarotTableData extends DataClass implements Insertable<TarotTableData> {
           other.id == id &&
           other.name == name &&
           other.imageUrl == imageUrl &&
-          other.description == description);
+          other.description == description &&
+          other.note == note);
 }
 
 class TarotTableCompanion extends UpdateCompanion<TarotTableData> {
@@ -103,22 +120,26 @@ class TarotTableCompanion extends UpdateCompanion<TarotTableData> {
   final Value<String> name;
   final Value<String> imageUrl;
   final Value<String> description;
+  final Value<String> note;
   const TarotTableCompanion({
     this.id = const Value.absent(),
     this.name = const Value.absent(),
     this.imageUrl = const Value.absent(),
     this.description = const Value.absent(),
+    this.note = const Value.absent(),
   });
   TarotTableCompanion copyWith(
       {Value<String> id,
       Value<String> name,
       Value<String> imageUrl,
-      Value<String> description}) {
+      Value<String> description,
+      Value<String> note}) {
     return TarotTableCompanion(
       id: id ?? this.id,
       name: name ?? this.name,
       imageUrl: imageUrl ?? this.imageUrl,
       description: description ?? this.description,
+      note: note ?? this.note,
     );
   }
 }
@@ -178,8 +199,20 @@ class $TarotTableTable extends TarotTable
     );
   }
 
+  final VerificationMeta _noteMeta = const VerificationMeta('note');
+  GeneratedTextColumn _note;
   @override
-  List<GeneratedColumn> get $columns => [id, name, imageUrl, description];
+  GeneratedTextColumn get note => _note ??= _constructNote();
+  GeneratedTextColumn _constructNote() {
+    return GeneratedTextColumn(
+      'note',
+      $tableName,
+      true,
+    );
+  }
+
+  @override
+  List<GeneratedColumn> get $columns => [id, name, imageUrl, description, note];
   @override
   $TarotTableTable get asDslTable => this;
   @override
@@ -213,6 +246,12 @@ class $TarotTableTable extends TarotTable
     } else if (description.isRequired && isInserting) {
       context.missing(_descriptionMeta);
     }
+    if (d.note.present) {
+      context.handle(
+          _noteMeta, note.isAcceptableValue(d.note.value, _noteMeta));
+    } else if (note.isRequired && isInserting) {
+      context.missing(_noteMeta);
+    }
     return context;
   }
 
@@ -238,6 +277,9 @@ class $TarotTableTable extends TarotTable
     }
     if (d.description.present) {
       map['description'] = Variable<String, StringType>(d.description.value);
+    }
+    if (d.note.present) {
+      map['note'] = Variable<String, StringType>(d.note.value);
     }
     return map;
   }

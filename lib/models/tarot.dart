@@ -9,8 +9,9 @@ class Tarot extends Equatable {
   final String name;
   final String description;
   final String imageUrl;
+  String note;
 
-  Tarot({this.id, this.name, this.description, this.imageUrl})
+  Tarot({this.id, this.name, this.description, this.imageUrl, this.note})
       : super([id, name, description, imageUrl]);
 
   factory Tarot.fromJson(

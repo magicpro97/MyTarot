@@ -6,6 +6,8 @@ class TarotTable extends Table {
   TextColumn get imageUrl => text()();
   TextColumn get description => text().nullable()();
 
+  TextColumn get note => text().nullable()();
+
   @override
   Set<Column> get primaryKey => {id};
 }

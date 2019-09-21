@@ -17,7 +17,7 @@ class DetailPage extends StatelessWidget {
       body: TarotCardDetail(
         tarot: tarot,
       ),
-      floatingActionButton: NoteTarotButton(),
+      floatingActionButton: NoteTarotButton(tarot: tarot,),
     );
   }
 }

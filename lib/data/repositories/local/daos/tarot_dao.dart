@@ -18,6 +18,11 @@ class TarotDao extends DatabaseAccessor<MoorDb> with _$TarotDaoMixin {
   Future<void> insertTarots(List<TarotTableData> data) =>
       into(tarotTable).insertAll(data);
 
-  Future<bool> updateTarot(TarotTableData data) =>
+  Future<bool> replaceTarot(TarotTableData data) =>
       update(tarotTable).replace(data);
+
+  Future<int> updateNoteTarot(TarotTableData data) =>
+      (update(tarotTable)
+        ..where((tarot) => tarot.id.equals(data.note)))
+          .write(TarotTableCompanion(note: Value(data.note)));
 }

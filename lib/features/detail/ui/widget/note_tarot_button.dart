@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:my_tarot/features/detail/ui/bloc/bloc.dart';
+import 'package:my_tarot/models/tarot.dart';
 
 class NoteTarotButton extends StatelessWidget {
+  final Tarot tarot;
+
   const NoteTarotButton({
-    Key key,
+    Key key, this.tarot,
   }) : super(key: key);
 
   @override
@@ -28,7 +31,7 @@ class NoteTarotButton extends StatelessWidget {
                 } else {
                   final bottomSheetController = showBottomSheet(
                       context: context, builder: (context) => NoteSheet());
-                  detailBloc.dispatch(OpenNote(bottomSheetController));
+                  detailBloc.dispatch(OpenNote(bottomSheetController, tarot));
                 }
               },
             );
@@ -69,7 +72,7 @@ class NoteSheet extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
-                initialValue: detailBloc.content,
+                initialValue: detailBloc.noteContent,
                 decoration: InputDecoration(hintText: "Type something here..."),
                 focusNode: textFocusNote,
                 minLines: 3,
