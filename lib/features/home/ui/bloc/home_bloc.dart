@@ -6,6 +6,7 @@ import 'package:get_it/get_it.dart';
 import 'package:my_tarot/data/repositories/local/moor_db.dart';
 import 'package:my_tarot/data/tranformers/tarot_tranformer.dart';
 import 'package:my_tarot/models/tarot.dart';
+import 'package:my_tarot/utils/network_utils.dart';
 import 'package:rxdart/rxdart.dart';
 
 import './bloc.dart';
@@ -30,8 +31,12 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with TarotTransformer {
   ) async* {
     print(event.toString());
     if (event is InitDataEvent) {
-      await _initData();
-      yield LoadedState();
+      if (await NetworkUtils.isConnect()) {
+        await _initData();
+        yield LoadedState();
+      } else {
+        yield LoadFailState();
+      }
     }
   }
 

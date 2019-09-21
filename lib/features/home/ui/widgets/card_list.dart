@@ -15,31 +15,42 @@ class CardList extends StatelessWidget with TarotTransformer {
     /*24 is for notification bar on Android*/
     final double itemHeight = (size.height - kToolbarHeight - 24) / 2;
     final double itemWidth = size.width / 2;
+    final ratio = itemWidth / itemHeight;
 
     return Container(
       child: BlocBuilder(
         bloc: homeBloc,
         builder: (BuildContext context, HomeState state) =>
-            StreamBuilder<List<TarotCard>>(
-                stream:
-                homeBloc.tarotListStream.transform(tarotCardListTransform),
+            StreamBuilder<
+                List<TarotCard>>(
+                stream: homeBloc.tarotListStream.transform(
+                    tarotCardListTransform),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     if (state is InitialHomeBlocState) {
                       homeBloc.dispatch(InitDataEvent());
+                      return LinearProgressIndicator();
                     }
-                    return LinearProgressIndicator();
+                    return Center(
+                      child: Text(
+                          "Can't load data. Please check internet connection."),
+                    );
                   }
                   if (snapshot.hasError) {
                     print(snapshot.error);
                   }
                   final tarotCards = snapshot.data;
-
-                  return GridView.count(
-                    childAspectRatio: (itemWidth / itemHeight),
-                    shrinkWrap: true,
-                    crossAxisCount: 2,
-                    children: tarotCards,
+                  return OrientationBuilder(
+                    builder: (context, orientation) =>
+                        GridView.count(
+                          childAspectRatio:
+                          ratio < 0.635 ? 0.7 : ratio < 0.639 ? 0.6 : 0.55,
+                          shrinkWrap: true,
+                          crossAxisCount: orientation == Orientation.portrait
+                              ? 2
+                              : 4,
+                          children: tarotCards,
+                        ),
                   );
                 }),
       ),

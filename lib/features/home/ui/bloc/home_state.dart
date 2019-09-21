@@ -13,3 +13,5 @@ class NetworkConnectedState extends HomeState {}
 class NetworkDisconnectedState extends HomeState {}
 
 class LoadedState extends HomeState {}
+
+class LoadFailState extends HomeState {}

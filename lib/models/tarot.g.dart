@@ -12,7 +12,6 @@ Tarot _$TarotFromJson(Map<String, dynamic> json) {
     name: json['name'] as String,
     description: json['description'] as String,
     imageUrl: json['imageUrl'] as String,
-    note: json['note'] as String,
   );
 }
 
@@ -21,5 +20,4 @@ Map<String, dynamic> _$TarotToJson(Tarot instance) => <String, dynamic>{
       'name': instance.name,
       'description': instance.description,
       'imageUrl': instance.imageUrl,
-  'note': instance.note,
     };

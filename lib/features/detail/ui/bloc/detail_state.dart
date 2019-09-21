@@ -7,3 +7,7 @@ abstract class DetailState extends Equatable {
 }
 
 class InitialDetailState extends DetailState {}
+
+class LoadingState extends DetailState {}
+
+class LoadedState extends DetailState {}

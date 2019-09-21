@@ -9,7 +9,6 @@ class TarotTransformer {
   final tarotListTransform =
       StreamTransformer<QuerySnapshot, List<Tarot>>.fromHandlers(
           handleData: (data, sink) => sink.add(data.documents.map((doc) {
-                doc.data['id'] = doc.documentID;
                 return Tarot.fromJson(doc.data);
               }).toList()));
 

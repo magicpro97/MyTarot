@@ -1,18 +1,21 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:my_tarot/data/repositories/local/moor_db.dart';
+import 'package:my_tarot/models/note.dart';
 import 'package:my_tarot/models/tarot.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:uuid/uuid.dart';
 
 import './bloc.dart';
 
 class DetailBloc extends Bloc<DetailEvent, DetailState> {
   final localDb = GetIt.I<MoorDb>();
   final _noteSheetController = BehaviorSubject<bool>.seeded(false);
-  final _noteController = BehaviorSubject<String>();
+  final _noteController = BehaviorSubject<String>.seeded("");
   PersistentBottomSheetController _bottomSheetController;
 
   bool get isSheetOpen => _noteSheetController.value;
@@ -27,6 +30,7 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
 
   Stream<String> get noteStream => _noteController.stream;
 
+  Note _note;
   Tarot _tarot;
 
   @override
@@ -37,10 +41,14 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
     DetailEvent event,
   ) async* {
     if (event is OpenNote) {
+      yield LoadingState();
       await _getNote(event.tarot.id);
+      yield LoadedState();
       _openNoteSheetHandler(event);
     } else if (event is CloseNote) {
+      yield LoadingState();
       await _saveNote();
+      yield LoadedState();
       _closeNoteSheetHandler();
     }
   }
@@ -64,20 +72,37 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
   }
 
   Future<void> _getNote(String id) async {
-    final tarotTblDate = await localDb.tarotDao.getTarotById(id);
-    if (tarotTblDate != null) {
-      _tarot = Tarot.fromJson(tarotTblDate.toJson());
-      updateNote(_tarot.note);
+    final docs =
+    await Firestore.instance.collection("tarot").document(id).get();
+    if (docs.exists) {
+      _tarot = Tarot.fromJson(docs.data);
+      final note = await localDb.noteDao.getNoteByTarotId(_tarot.id);
+      if (note != null) {
+        _note = Note.fromJson(note.toJson());
+        print("AAA ${_note.content}");
+        updateNote(_note.content);
+      } else {
+        updateNote("");
+      }
+    } else {
+      print("Can't get note!");
     }
   }
 
   Future<void> _saveNote() async {
-    if (_tarot != null) {
-      _tarot.note = noteContent;
-      await localDb.tarotDao
-          .updateNoteTarot(TarotTableData.fromJson(_tarot.toJson()));
-      updateNote("");
-      print("Saved");
+    if (_note != null) {
+      final temp = _note.toJson();
+      temp['content'] = noteContent;
+      await localDb.noteDao.updateContent(NoteTableData.fromJson(temp));
+    } else {
+      await localDb.noteDao.insertNote(NoteTableData(
+        tarotId: _tarot.id,
+        content: noteContent,
+        id: Uuid().v1(),
+      ));
     }
+    updateNote("");
+    localDb.noteDao.getNoteByTarotId(_tarot.id).then((value) =>
+        print(value.content));
   }
 }

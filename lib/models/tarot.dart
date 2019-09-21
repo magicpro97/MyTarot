@@ -9,9 +9,8 @@ class Tarot extends Equatable {
   final String name;
   final String description;
   final String imageUrl;
-  String note;
 
-  Tarot({this.id, this.name, this.description, this.imageUrl, this.note})
+  Tarot({this.id, this.name, this.description, this.imageUrl})
       : super([id, name, description, imageUrl]);
 
   factory Tarot.fromJson(
@@ -20,4 +19,7 @@ class Tarot extends Equatable {
       _$TarotFromJson(json);
 
   Map<String, dynamic> toJson() => _$TarotToJson(this);
+
+  @override
+  String toString() => id;
 }

@@ -5,11 +5,14 @@ import 'package:get_it/get_it.dart';
 import 'package:my_tarot/features/detail/ui/bloc/bloc.dart';
 import 'package:my_tarot/models/tarot.dart';
 
+import 'note_sheet.dart';
+
 class NoteTarotButton extends StatelessWidget {
   final Tarot tarot;
 
   const NoteTarotButton({
-    Key key, this.tarot,
+    Key key,
+    this.tarot,
   }) : super(key: key);
 
   @override
@@ -23,66 +26,27 @@ class NoteTarotButton extends StatelessWidget {
           builder: (context, snapshot) {
             if (!snapshot.hasData) return Container();
             return FloatingActionButton(
-              child: snapshot.data ? Icon(Icons.save) : Icon(Icons.note),
+              child: snapshot.data
+                  ? state is LoadingState
+                  ? CircularProgressIndicator(
+                backgroundColor: Colors.white,
+              )
+                  : Icon(Icons.save)
+                  : Icon(Icons.note),
               tooltip: snapshot.data ? "Save" : "Open",
               onPressed: () {
                 if (detailBloc.isSheetOpen) {
                   detailBloc.dispatch(CloseNote());
                 } else {
                   final bottomSheetController = showBottomSheet(
-                      context: context, builder: (context) => NoteSheet());
+                    context: context,
+                    builder: (context) => NoteSheet(),
+                  );
                   detailBloc.dispatch(OpenNote(bottomSheetController, tarot));
                 }
               },
             );
           }),
-    );
-  }
-}
-
-class NoteSheet extends StatelessWidget {
-  const NoteSheet({
-    Key key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final detailBloc = GetIt.I<DetailBloc>();
-    final titleStyle = Theme.of(context).textTheme.title;
-    final textFocusNote = FocusNode();
-
-    return BlocBuilder(
-      bloc: detailBloc,
-      builder: (context, state) => Container(
-        decoration: BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(32.0)),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 8.0, right: 8.0, top: 24.0, bottom: 8.0),
-              child: Text(
-                "Say your thinking about the card:",
-                style: titleStyle,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                initialValue: detailBloc.noteContent,
-                decoration: InputDecoration(hintText: "Type something here..."),
-                focusNode: textFocusNote,
-                minLines: 3,
-                maxLines: 6,
-                onChanged: (value) => detailBloc.updateNote(value),
-              ),
-            )
-          ],
-        ),
-      ),
     );
   }
 }
