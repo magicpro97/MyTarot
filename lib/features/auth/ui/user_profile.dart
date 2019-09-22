@@ -18,9 +18,11 @@ class UserProfile extends StatelessWidget {
         child: BlocBuilder<AuthBloc, AuthState>(
             bloc: authBloc,
             builder: (context, state) {
-              authBloc.dispatch(CheckingSignIn());
+              authBloc.dispatch(CheckingSignInEvent());
               return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: authBloc.user != null
+                    ? MainAxisAlignment.start
+                    : MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   state is NotSignInState
@@ -29,7 +31,7 @@ class UserProfile extends StatelessWidget {
                           ? CircularProgressIndicator()
                           : state is SignInFailState
                               ? _buildGSignInButtonWithError(context)
-                              : _buildMenuContent(authBloc.user),
+                      : _buildUserProfile(authBloc.user),
                 ],
               );
             }),
@@ -54,7 +56,8 @@ class UserProfile extends StatelessWidget {
     );
   }
 
-  Widget _buildMenuContent(FirebaseUser user) => UserSummaryInfo(
+  Widget _buildUserProfile(FirebaseUser user) =>
+      UserSummaryInfo(
         user: user,
       );
 

@@ -8,7 +8,7 @@ import 'package:my_tarot/features/home/ui/bloc/bloc.dart';
 import 'package:my_tarot/features/shared/widgets/tarot_card.dart';
 
 class CardList extends StatelessWidget with TarotTransformer {
-  static String _TAG = "CardList";
+  static const String _TAG = "CardList";
 
   @override
   Widget build(BuildContext context) {

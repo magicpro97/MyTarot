@@ -10,11 +10,17 @@ class GoogleAuth {
     scopes: _googleSignInScope,
   );
 
-  Future<GoogleSignInAccount> getSignedInAccount() async {
+  static Future<GoogleSignInAccount> getSignedInAccount() async {
     GoogleSignInAccount account = _googleSignIn.currentUser;
     if (account == null) {
       account = await _googleSignIn.signIn();
     }
     return account;
   }
+
+  static Future<GoogleSignInAccount> signOut() => _googleSignIn.signOut();
+
+  static Future<GoogleSignInAccount> disconnect() => _googleSignIn.disconnect();
+
+  static GoogleSignInAccount get currentUser => _googleSignIn.currentUser;
 }

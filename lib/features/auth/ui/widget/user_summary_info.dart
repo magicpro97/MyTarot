@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:my_tarot/features/auth/ui/bloc/auth_bloc.dart';
@@ -19,37 +20,13 @@ class UserSummaryInfo extends StatelessWidget {
 
     return Container(
       width: double.infinity,
-      //height: 200.0,
       padding: EdgeInsets.all(8.0),
       child: Card(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Container(
-              padding: EdgeInsets.all(16.0),
-              height: 128,
-              width: 128,
-              child: Stack(
-                children: <Widget>[
-                  Positioned.fill(
-                    child: CircleAvatar(
-                      backgroundColor: Colors.transparent,
-                      backgroundImage:
-                          CachedNetworkImageProvider(user.photoUrl),
-                    ),
-                  ),
-                  Positioned.fill(
-                      child: Align(
-                          alignment: Alignment.bottomRight,
-                          child: IconButton(
-                            icon: Icon(Icons.edit),
-                            tooltip: "Edit",
-                            onPressed: () {},
-                          ))),
-                ],
-              ),
-            ),
+            UserAvatar(user: user),
             Text(
               user.displayName,
               style: displayNameStyle,
@@ -59,10 +36,13 @@ class UserSummaryInfo extends StatelessWidget {
               style: emailStyle,
             ),
             FlatButton(
-                onPressed: () {
-                  _signOut();
-                },
-                child: Text("Sign out"))
+              onPressed: () => _changeUser(),
+              child: Text("Change user"),
+            ),
+            FlatButton(
+              onPressed: () => _signOut(),
+              child: Text("Sign out"),
+            )
           ],
         ),
       ),
@@ -72,5 +52,46 @@ class UserSummaryInfo extends StatelessWidget {
   void _signOut() {
     final authBloc = GetIt.I<AuthBloc>();
     authBloc.dispatch(SignOutEvent());
+  }
+
+  void _changeUser() {
+    final authBloc = GetIt.I<AuthBloc>();
+    authBloc.dispatch(ChangeUserEvent());
+  }
+}
+
+class UserAvatar extends StatelessWidget {
+  const UserAvatar({
+    Key key,
+    @required this.user,
+  }) : super(key: key);
+
+  final FirebaseUser user;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(16.0),
+      height: 128,
+      width: 128,
+      child: Stack(
+        children: <Widget>[
+          Positioned.fill(
+            child: CircleAvatar(
+              backgroundColor: Colors.transparent,
+              backgroundImage: CachedNetworkImageProvider(user.photoUrl),
+            ),
+          ),
+//                  Positioned.fill(
+//                      child: Align(
+//                          alignment: Alignment.bottomRight,
+//                          child: IconButton(
+//                            icon: Icon(Icons.edit),
+//                            tooltip: "Edit",
+//                            onPressed: () {},
+//                          ))),
+        ],
+      ),
+    );
   }
 }

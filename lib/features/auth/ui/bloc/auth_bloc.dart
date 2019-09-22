@@ -2,16 +2,12 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get_it/get_it.dart';
+import 'package:my_tarot/features/auth/auth.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../auth.dart';
-import '../../google_auth.dart';
 import 'bloc.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final gAuth = GetIt.I<GoogleAuth>();
-  final auth = GetIt.I<Auth>();
   final BehaviorSubject<FirebaseUser> _userController;
 
   FirebaseUser get user => _userController.value;
@@ -29,7 +25,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   Stream<AuthState> mapEventToState(
     AuthEvent event,
   ) async* {
-    if (event is CheckingSignIn) {
+    if (event is CheckingSignInEvent) {
       if (user == null) {
         yield NotSignInState();
       } else {
@@ -37,8 +33,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } else if (event is SignInEvent) {
       yield LoadingState();
-      updateUser(
-          await auth.signWithGoogleSignIn(await gAuth.getSignedInAccount()));
+      updateUser(await Auth.signWithGoogleSignIn());
       if (user == null) {
         yield SignInFailState();
       } else {
@@ -47,11 +42,19 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } else if (event is SignOutEvent) {
       _signOut();
       yield NotSignInState();
+    } else if (event is ChangeUserEvent) {
+      _signOut();
+      updateUser(await Auth.signWithGoogleSignIn());
+      if (user == null) {
+        yield SignInFailState();
+      } else {
+        yield AlreadySuccessState(user);
+      }
     }
   }
 
   void _signOut() {
-    auth.signOut();
+    Auth.signOut();
     updateUser(null);
   }
 

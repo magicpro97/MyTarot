@@ -6,8 +6,10 @@ abstract class AuthEvent extends Equatable {
   AuthEvent([List props = const <dynamic>[]]) : super(props);
 }
 
-class CheckingSignIn extends AuthEvent {}
+class CheckingSignInEvent extends AuthEvent {}
 
 class SignInEvent extends AuthEvent {}
 
 class SignOutEvent extends AuthEvent {}
+
+class ChangeUserEvent extends AuthEvent {}
