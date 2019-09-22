@@ -13,7 +13,14 @@ class OpenNote extends DetailEvent {
 
   final Tarot tarot;
 
-  OpenNote(this.bottomSheetController, this.tarot);
+  OpenNote(this.bottomSheetController, this.tarot)
+      : super([
+    [bottomSheetController, tarot]
+  ]);
 }
 
-class CloseNote extends DetailEvent {}
+class CloseNote extends DetailEvent {
+  final bool save;
+
+  CloseNote({this.save}) : super([save]);
+}

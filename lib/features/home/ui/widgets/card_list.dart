@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -6,6 +8,8 @@ import 'package:my_tarot/features/home/ui/bloc/bloc.dart';
 import 'package:my_tarot/features/shared/widgets/tarot_card.dart';
 
 class CardList extends StatelessWidget with TarotTransformer {
+  static String _TAG = "CardList";
+
   @override
   Widget build(BuildContext context) {
     final homeBloc = GetIt.I<HomeBloc>();
@@ -39,12 +43,16 @@ class CardList extends StatelessWidget with TarotTransformer {
                   if (snapshot.hasError) {
                     print(snapshot.error);
                   }
+                  log("Resolution ratio: $ratio", name: _TAG);
                   final tarotCards = snapshot.data;
                   return OrientationBuilder(
                     builder: (context, orientation) =>
                         GridView.count(
-                          childAspectRatio:
-                          ratio < 0.635 ? 0.7 : ratio < 0.639 ? 0.6 : 0.55,
+                          childAspectRatio: ratio < 0.6
+                              ? 0.7
+                              : ratio < 0.635 ? 0.6 : ratio < 0.639
+                              ? 0.6
+                              : 0.55,
                           shrinkWrap: true,
                           crossAxisCount: orientation == Orientation.portrait
                               ? 2

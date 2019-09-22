@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -19,6 +18,12 @@ class NoteTarotButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final detailBloc = GetIt.I<DetailBloc>();
 
+    Future<bool> _onWillPop() async {
+      detailBloc.dispatch(CloseNote(save: false));
+      Navigator.pop(context);
+      return false;
+    }
+
     return BlocBuilder(
       bloc: detailBloc,
       builder: (context, state) => StreamBuilder<bool>(
@@ -36,11 +41,15 @@ class NoteTarotButton extends StatelessWidget {
               tooltip: snapshot.data ? "Save" : "Open",
               onPressed: () {
                 if (detailBloc.isSheetOpen) {
-                  detailBloc.dispatch(CloseNote());
+                  detailBloc.dispatch(CloseNote(save: true));
                 } else {
                   final bottomSheetController = showBottomSheet(
                     context: context,
-                    builder: (context) => NoteSheet(),
+                    builder: (context) =>
+                        WillPopScope(
+                          child: NoteSheet(),
+                          onWillPop: _onWillPop,
+                        ),
                   );
                   detailBloc.dispatch(OpenNote(bottomSheetController, tarot));
                 }

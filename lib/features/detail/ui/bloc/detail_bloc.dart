@@ -46,16 +46,18 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
       yield LoadedState();
       _openNoteSheetHandler(event);
     } else if (event is CloseNote) {
-      yield LoadingState();
-      await _saveNote();
-      yield LoadedState();
-      _closeNoteSheetHandler();
+      if (event.save) {
+        yield LoadingState();
+        await _saveNote();
+        yield LoadedState();
+        _closeNoteSheetHandler();
+      }
+      updateSheetState(false);
     }
   }
 
   void _closeNoteSheetHandler() {
     _bottomSheetController.close();
-    updateSheetState(false);
     _bottomSheetController = null;
   }
 
@@ -79,7 +81,6 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
       final note = await localDb.noteDao.getNoteByTarotId(_tarot.id);
       if (note != null) {
         _note = Note.fromJson(note.toJson());
-        print("AAA ${_note.content}");
         updateNote(_note.content);
       } else {
         updateNote("");
@@ -102,7 +103,8 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
       ));
     }
     updateNote("");
-    localDb.noteDao.getNoteByTarotId(_tarot.id).then((value) =>
-        print(value.content));
+    localDb.noteDao
+        .getNoteByTarotId(_tarot.id)
+        .then((value) => print(value.content));
   }
 }
