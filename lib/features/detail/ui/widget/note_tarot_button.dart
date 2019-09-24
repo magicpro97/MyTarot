@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:my_tarot/data/models/tarot.dart';
 import 'package:my_tarot/features/detail/ui/bloc/bloc.dart';
-import 'package:my_tarot/models/tarot.dart';
 
 import 'note_sheet.dart';
 

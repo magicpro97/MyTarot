@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:my_tarot/data/models/tarot.dart';
 import 'package:my_tarot/features/detail/ui/detail_page.dart';
-import 'package:my_tarot/models/tarot.dart';
 import 'package:shimmer/shimmer.dart';
 
 class TarotCard extends StatelessWidget {

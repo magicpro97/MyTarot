@@ -10,7 +10,7 @@ import 'bloc/bloc.dart';
 class UserProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final authBloc = AuthBloc();
+    final authBloc = GetIt.I<AuthBloc>();
 
     return Container(
       child: Padding(

@@ -1,18 +1,17 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get_it/get_it.dart';
-import 'package:my_tarot/data/repositories/local/moor_db.dart';
+import 'package:my_tarot/data/models/tarot.dart';
+import 'package:my_tarot/data/repositories/remote/firestore_db.dart';
 import 'package:my_tarot/data/tranformers/tarot_tranformer.dart';
-import 'package:my_tarot/models/tarot.dart';
-import 'package:my_tarot/utils/network_utils.dart';
+import 'package:my_tarot/features/shared/widgets/tarot_card.dart';
 import 'package:rxdart/rxdart.dart';
 
 import './bloc.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> with TarotTransformer {
-  final localDb = GetIt.I<MoorDb>();
+  final remoteDb = GetIt.I<FirestoreDb>();
 
   final _tarotListController = BehaviorSubject<List<Tarot>>();
 
@@ -22,38 +21,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with TarotTransformer {
 
   Function get updateTarotList => _tarotListController.add;
 
+  Stream<List<TarotCard>> get tarotCardListStream =>
+      tarotListStream.transform(toTarotCardList);
+
+  HomeBloc() {
+    _tarotListController.sink.addStream(remoteDb.tarotDao.tarotListStream);
+  }
+
   @override
   HomeState get initialState => InitialHomeBlocState();
 
   @override
   Stream<HomeState> mapEventToState(
-    HomeEvent event,
-  ) async* {
-    print(event.toString());
-    if (event is InitDataEvent) {
-      if (await NetworkUtils.isConnect()) {
-        await _initData();
-        yield LoadedState();
-      } else {
-        yield LoadFailState();
-      }
-    }
-  }
+    HomeEvent event,) async* {}
 
   @override
   void dispose() {
     _tarotListController.close();
     super.dispose();
-  }
-
-  Future<void> _initData() async {
-    await Firestore.instance
-        .collection('tarot')
-        .orderBy('name')
-        .snapshots()
-        .transform(tarotListTransform)
-        .pipe(_tarotListController);
-//        .transform(tarotTblDataTransform)
-//        .listen((data) async => await localDb.tarotDao.insertTarots(data));
   }
 }

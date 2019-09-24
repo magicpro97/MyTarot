@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:my_tarot/models/tarot.dart';
+import 'package:my_tarot/data/models/tarot.dart';
 
 @immutable
 abstract class DetailEvent extends Equatable {

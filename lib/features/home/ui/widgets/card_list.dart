@@ -3,11 +3,10 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:my_tarot/data/tranformers/tarot_tranformer.dart';
 import 'package:my_tarot/features/home/ui/bloc/bloc.dart';
 import 'package:my_tarot/features/shared/widgets/tarot_card.dart';
 
-class CardList extends StatelessWidget with TarotTransformer {
+class CardList extends StatelessWidget {
   static const String _TAG = "CardList";
 
   @override
@@ -25,20 +24,11 @@ class CardList extends StatelessWidget with TarotTransformer {
       child: BlocBuilder(
         bloc: homeBloc,
         builder: (BuildContext context, HomeState state) =>
-            StreamBuilder<
-                List<TarotCard>>(
-                stream: homeBloc.tarotListStream.transform(
-                    tarotCardListTransform),
+            StreamBuilder<List<TarotCard>>(
+                stream: homeBloc.tarotCardListStream,
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    if (state is InitialHomeBlocState) {
-                      homeBloc.dispatch(InitDataEvent());
-                      return LinearProgressIndicator();
-                    }
-                    return Center(
-                      child: Text(
-                          "Can't load data. Please check internet connection."),
-                    );
+                    return LinearProgressIndicator();
                   }
                   if (snapshot.hasError) {
                     print(snapshot.error);
@@ -54,9 +44,8 @@ class CardList extends StatelessWidget with TarotTransformer {
                               ? 0.6
                               : 0.55,
                           shrinkWrap: true,
-                          crossAxisCount: orientation == Orientation.portrait
-                              ? 2
-                              : 4,
+                          crossAxisCount:
+                          orientation == Orientation.portrait ? 2 : 4,
                           children: tarotCards,
                         ),
                   );

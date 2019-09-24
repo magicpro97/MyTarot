@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:my_tarot/data/models/tarot.dart';
 import 'package:my_tarot/data/repositories/local/moor_db.dart';
 import 'package:my_tarot/features/shared/widgets/tarot_card.dart';
-import 'package:my_tarot/models/tarot.dart';
 
 class TarotTransformer {
   final tarotListTransform =
@@ -12,7 +12,7 @@ class TarotTransformer {
                 return Tarot.fromJson(doc.data);
               }).toList()));
 
-  final tarotCardListTransform =
+  final toTarotCardList =
       StreamTransformer<List<Tarot>, List<TarotCard>>.fromHandlers(
           handleData: (data, sink) => sink.add(data
               .map((tarot) => TarotCard(

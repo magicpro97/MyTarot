@@ -4,9 +4,9 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:my_tarot/data/models/note.dart';
+import 'package:my_tarot/data/models/tarot.dart';
 import 'package:my_tarot/data/repositories/local/moor_db.dart';
-import 'package:my_tarot/models/note.dart';
-import 'package:my_tarot/models/tarot.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 
