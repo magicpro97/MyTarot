@@ -532,7 +532,7 @@ class $NoteTableTable extends NoteTable
 }
 
 abstract class _$MoorDb extends GeneratedDatabase {
-  _$MoorDb(QueryExecutor e) : super(const SqlTypeSystem.withDefaults(), e);
+  _$MoorDb(QueryExecutor e) : super(SqlTypeSystem.withDefaults(), e);
   $TarotTableTable _tarotTable;
   $TarotTableTable get tarotTable => _tarotTable ??= $TarotTableTable(this);
   $NoteTableTable _noteTable;

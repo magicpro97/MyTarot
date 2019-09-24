@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_tarot/features/home/ui/home_page.dart';
+import 'package:my_tarot/features/slash/ui/slash_page.dart';
 
 class App extends StatelessWidget {
   @override
@@ -11,7 +11,7 @@ class App extends StatelessWidget {
           buttonTheme: ButtonThemeData(
             textTheme: ButtonTextTheme.primary,
           )),
-      home: HomePage(),
+      home: SlashPage(logoUrl: 'assets/icons/tarot.svg'),
     );
   }
 }
