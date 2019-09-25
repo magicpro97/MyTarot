@@ -32,8 +32,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with TarotTransformer {
   HomeState get initialState => InitialHomeBlocState();
 
   @override
-  Stream<HomeState> mapEventToState(
-    HomeEvent event,) async* {}
+  Stream<HomeState> mapEventToState(HomeEvent event,) async* {
+    if (event is TabChangeEvent) {
+      switch (event.index) {
+        case 0:
+          yield ShowAppBarState();
+          break;
+        case 1:
+          yield HideAppBarState();
+          break;
+      }
+    }
+  }
 
   @override
   void dispose() {

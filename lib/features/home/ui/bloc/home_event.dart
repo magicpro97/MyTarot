@@ -11,3 +11,9 @@ class CheckingNetworkEvent extends HomeEvent {}
 class LoadMoreEvent extends HomeEvent {}
 
 class InitDataEvent extends HomeEvent {}
+
+class TabChangeEvent extends HomeEvent {
+  final int index;
+
+  TabChangeEvent(this.index) : super([index]);
+}

@@ -1,33 +1,44 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_tarot/data/models/tarot.dart';
 import 'package:my_tarot/features/auth/ui/user_profile.dart';
 import 'package:my_tarot/features/detail/ui/detail_page.dart';
+import 'package:my_tarot/features/home/ui/bloc/home_bloc.dart';
 import 'package:my_tarot/features/home/ui/widgets/card_list.dart';
+import 'package:provider/provider.dart';
+
+import 'bloc/bloc.dart';
 
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final homeBloc = Provider.of<HomeBloc>(context);
     final unselectedLabelColor = Colors.black;
     final selectedLabelColors = Colors.blue;
 
     return DefaultTabController(
-      child: Scaffold(
-        appBar: _buildAppBar(),
-        body: _buildTabView(context),
-        bottomNavigationBar: TabBar(
-          labelColor: selectedLabelColors,
-          unselectedLabelColor: unselectedLabelColor,
-          tabs: <Widget>[
-            Tab(
-              icon: Icon(FontAwesomeIcons.creditCard),
+      child: BlocBuilder<HomeBloc, HomeState>(
+        bloc: homeBloc,
+        builder: (context, state) =>
+            Scaffold(
+              appBar: state is ShowAppBarState ? _buildAppBar() : _hideAppBar(),
+              body: _buildTabView(context),
+              bottomNavigationBar: TabBar(
+                labelColor: selectedLabelColors,
+                unselectedLabelColor: unselectedLabelColor,
+                tabs: <Widget>[
+                  Tab(
+                    icon: Icon(FontAwesomeIcons.creditCard),
+                  ),
+                  Tab(
+                    icon: Icon(Icons.person_outline),
+                  ),
+                ],
+                onTap: (index) => homeBloc.dispatch(TabChangeEvent(index)),
+              ),
             ),
-            Tab(
-              icon: Icon(Icons.person_outline),
-            ),
-          ],
-        ),
       ),
       length: 2,
     );
@@ -62,6 +73,12 @@ class HomePage extends StatelessWidget {
       ],
     );
   }
+
+  Widget _hideAppBar() =>
+      PreferredSize(
+        child: Container(),
+        preferredSize: Size.fromHeight(kToolbarHeight),
+      );
 }
 
 Future _goToDetailPage(BuildContext context, Tarot tarot) => Navigator.push(

@@ -15,3 +15,7 @@ class NetworkDisconnectedState extends HomeState {}
 class LoadedState extends HomeState {}
 
 class LoadFailState extends HomeState {}
+
+class HideAppBarState extends HomeState {}
+
+class ShowAppBarState extends HomeState {}
