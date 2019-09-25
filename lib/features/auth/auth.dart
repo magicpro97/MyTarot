@@ -1,32 +1,41 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_tarot/features/auth/google_auth.dart';
 
 class Auth {
   static FirebaseAuth _auth = FirebaseAuth.instance;
 
+  static const _TAG = 'Auth';
+
   static Future<FirebaseUser> get currentUser async =>
       await _auth.currentUser();
 
   static Future<FirebaseUser> signWithGoogleSignIn() async {
-    var ggUser = GoogleAuth.currentUser;
-    if (ggUser == null) {
-      ggUser = await GoogleAuth.getSignedInAccount();
-    }
+    log('Sign In', name: _TAG);
     final user = await currentUser;
+    log('Current user: $user', name: _TAG);
     if (user == null) {
-      final GoogleSignInAuthentication googleAuth =
-      await ggUser.authentication;
-      final AuthCredential credential = GoogleAuthProvider.getCredential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-      final AuthResult authResult =
+      var ggUser = GoogleAuth.currentUser;
+      log('Current gg user: $ggUser', name: _TAG);
+      if (ggUser == null) {
+        log('GG Sign In', name: _TAG);
+        ggUser = await GoogleAuth.getSignedInAccount();
+        log('New gg user: $ggUser', name: _TAG);
+        if (ggUser != null) {
+          final googleAuth = await ggUser.authentication;
+          final AuthCredential credential = GoogleAuthProvider.getCredential(
+            accessToken: googleAuth.accessToken,
+            idToken: googleAuth.idToken,
+          );
+          final AuthResult authResult =
           await _auth.signInWithCredential(credential);
-      return authResult.user;
-    } else {
-      return user;
+          log('New gg user: ${authResult.user}', name: _TAG);
+          return authResult.user;
+        }
+      }
     }
+    return user;
   }
 
   static Future<void> signOut() async {

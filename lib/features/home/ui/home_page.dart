@@ -23,7 +23,10 @@ class HomePage extends StatelessWidget {
         bloc: homeBloc,
         builder: (context, state) =>
             Scaffold(
-              appBar: state is ShowAppBarState ? _buildAppBar() : _hideAppBar(),
+              appBar: (state is ShowAppBarState) ||
+                  (state is InitialHomeBlocState)
+                  ? _buildAppBar()
+                  : _hideAppBar(),
               body: _buildTabView(context),
               bottomNavigationBar: TabBar(
                 labelColor: selectedLabelColors,
@@ -32,22 +35,26 @@ class HomePage extends StatelessWidget {
                   Tab(
                     icon: Icon(FontAwesomeIcons.creditCard),
                   ),
-                  Tab(
-                    icon: Icon(Icons.person_outline),
-                  ),
                 ],
                 onTap: (index) => homeBloc.dispatch(TabChangeEvent(index)),
               ),
+              drawer: Drawer(child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  UserProfile(),
+                ],
+              ),),
             ),
       ),
-      length: 2,
+      length: 1,
     );
   }
 
   TabBarView _buildTabView(BuildContext context) {
     return TabBarView(children: <Widget>[
       CardList(),
-      UserProfile(),
+      //  UserProfile(),
     ]);
   }
 

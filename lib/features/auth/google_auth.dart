@@ -13,7 +13,11 @@ class GoogleAuth {
   static Future<GoogleSignInAccount> getSignedInAccount() async {
     GoogleSignInAccount account = _googleSignIn.currentUser;
     if (account == null) {
-      account = await _googleSignIn.signIn();
+      try {
+        account = await _googleSignIn.signIn();
+      } catch (Exception) {
+        return null;
+      }
     }
     return account;
   }

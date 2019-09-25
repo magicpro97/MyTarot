@@ -40,7 +40,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> with TarotTransformer {
           break;
         case 1:
           yield HideAppBarState();
-          break;
       }
     }
   }
