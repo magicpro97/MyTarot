@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:my_tarot/features/detail/ui/bloc/bloc.dart';
+import 'package:provider/provider.dart';
 
 class NoteSheet extends StatelessWidget {
   const NoteSheet({
@@ -10,7 +10,7 @@ class NoteSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final detailBloc = GetIt.I<DetailBloc>();
+    final detailBloc = Provider.of<DetailBloc>(context);
     final titleStyle = Theme.of(context).textTheme.title;
     final textFocusNote = FocusNode();
 

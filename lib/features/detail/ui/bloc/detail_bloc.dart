@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,6 +14,7 @@ import 'package:uuid/uuid.dart';
 import './bloc.dart';
 
 class DetailBloc extends Bloc<DetailEvent, DetailState> {
+  static const _TAG = "DetailBloc";
   final localDb = GetIt.I<MoorDb>();
   final _noteSheetController = BehaviorSubject<bool>.seeded(false);
   final _noteController = BehaviorSubject<String>.seeded("");
@@ -37,9 +39,7 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
   DetailState get initialState => InitialDetailState();
 
   @override
-  Stream<DetailState> mapEventToState(
-    DetailEvent event,
-  ) async* {
+  Stream<DetailState> mapEventToState(DetailEvent event,) async* {
     if (event is OpenNote) {
       yield LoadingState();
       await _getNote(event.tarot.id);
@@ -49,8 +49,8 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
       if (event.save) {
         yield LoadingState();
         await _saveNote();
-        yield LoadedState();
         _closeNoteSheetHandler();
+        yield LoadedState();
       }
       updateSheetState(false);
     }
@@ -74,6 +74,7 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
   }
 
   Future<void> _getNote(String id) async {
+    log("Get note by tarot id $id", name: _TAG);
     final docs =
     await Firestore.instance.collection("tarot").document(id).get();
     if (docs.exists) {
@@ -92,10 +93,12 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
 
   Future<void> _saveNote() async {
     if (_note != null) {
+      log('Update $_note', name: _TAG);
       final temp = _note.toJson();
       temp['content'] = noteContent;
       await localDb.noteDao.updateContent(NoteTableData.fromJson(temp));
     } else {
+      log('Create a new note', name: _TAG);
       await localDb.noteDao.insertNote(NoteTableData(
         tarotId: _tarot.id,
         content: noteContent,

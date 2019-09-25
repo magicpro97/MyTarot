@@ -2,15 +2,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get_it/get_it.dart';
 import 'package:my_tarot/features/auth/ui/widget/user_summary_info.dart';
+import 'package:provider/provider.dart';
 
 import 'bloc/bloc.dart';
 
 class UserProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final authBloc = GetIt.I<AuthBloc>();
+    final authBloc = Provider.of<AuthBloc>(context);
 
     return Container(
       child: Padding(
@@ -40,7 +40,7 @@ class UserProfile extends StatelessWidget {
   }
 
   RaisedButton _buildGSignInButton(BuildContext context) {
-    final authBloc = GetIt.I<AuthBloc>();
+    final authBloc = Provider.of<AuthBloc>(context);
     final buttonGoogleTextStyle = Theme.of(context).buttonTheme.textTheme;
     return RaisedButton(
       child: Row(

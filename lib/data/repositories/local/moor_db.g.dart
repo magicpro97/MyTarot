@@ -296,10 +296,7 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
   final String userId;
   final String content;
   NoteTableData(
-      {@required this.id,
-      @required this.tarotId,
-        this.userId,
-      @required this.content});
+      {@required this.id, @required this.tarotId, this.userId, this.content});
   factory NoteTableData.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
@@ -457,7 +454,7 @@ class $NoteTableTable extends NoteTable
     return GeneratedTextColumn(
       'content',
       $tableName,
-      false,
+      true,
     );
   }
 

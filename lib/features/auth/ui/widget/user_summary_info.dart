@@ -2,9 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:my_tarot/features/auth/ui/bloc/auth_bloc.dart';
 import 'package:my_tarot/features/auth/ui/bloc/auth_event.dart';
+import 'package:provider/provider.dart';
 
 class UserSummaryInfo extends StatelessWidget {
   final FirebaseUser user;
@@ -36,11 +36,11 @@ class UserSummaryInfo extends StatelessWidget {
               style: emailStyle,
             ),
             FlatButton(
-              onPressed: () => _changeUser(),
+              onPressed: () => _changeUser(context),
               child: Text("Change user"),
             ),
             FlatButton(
-              onPressed: () => _signOut(),
+              onPressed: () => _signOut(context),
               child: Text("Sign out"),
             )
           ],
@@ -49,13 +49,13 @@ class UserSummaryInfo extends StatelessWidget {
     );
   }
 
-  void _signOut() {
-    final authBloc = GetIt.I<AuthBloc>();
+  void _signOut(BuildContext context) {
+    final authBloc = Provider.of<AuthBloc>(context);
     authBloc.dispatch(SignOutEvent());
   }
 
-  void _changeUser() {
-    final authBloc = GetIt.I<AuthBloc>();
+  void _changeUser(BuildContext context) {
+    final authBloc = Provider.of<AuthBloc>(context);
     authBloc.dispatch(ChangeUserEvent());
   }
 }

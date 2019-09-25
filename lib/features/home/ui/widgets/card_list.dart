@@ -2,16 +2,16 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:my_tarot/features/home/ui/bloc/bloc.dart';
 import 'package:my_tarot/features/shared/widgets/tarot_card.dart';
+import 'package:provider/provider.dart';
 
 class CardList extends StatelessWidget {
   static const String _TAG = "CardList";
 
   @override
   Widget build(BuildContext context) {
-    final homeBloc = GetIt.I<HomeBloc>();
+    final homeBloc = Provider.of<HomeBloc>(context);
 
     var size = MediaQuery.of(context).size;
 
