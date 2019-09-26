@@ -42,14 +42,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } else if (event is SignOutEvent) {
       _signOut();
       yield NotSignInState();
-    } else if (event is ChangeUserEvent) {
-      _signOut();
-      updateUser(await Auth.signWithGoogleSignIn());
-      if (user == null) {
-        yield SignInFailState();
-      } else {
-        yield AlreadySuccessState(user);
-      }
     }
   }
 

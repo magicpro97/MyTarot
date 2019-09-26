@@ -36,10 +36,6 @@ class UserSummaryInfo extends StatelessWidget {
               style: emailStyle,
             ),
             FlatButton(
-              onPressed: () => _changeUser(context),
-              child: Text("Change user"),
-            ),
-            FlatButton(
               onPressed: () => _signOut(context),
               child: Text("Sign out"),
             )
@@ -52,11 +48,6 @@ class UserSummaryInfo extends StatelessWidget {
   void _signOut(BuildContext context) {
     final authBloc = Provider.of<AuthBloc>(context);
     authBloc.dispatch(SignOutEvent());
-  }
-
-  void _changeUser(BuildContext context) {
-    final authBloc = Provider.of<AuthBloc>(context);
-    authBloc.dispatch(ChangeUserEvent());
   }
 }
 
