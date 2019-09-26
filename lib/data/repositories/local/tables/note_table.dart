@@ -4,7 +4,7 @@ class NoteTable extends Table {
   TextColumn get id => text()();
   TextColumn get tarotId => text()();
 
-  TextColumn get userId => text().nullable()();
+  TextColumn get userId => text()();
 
   TextColumn get content => text().nullable()();
 }

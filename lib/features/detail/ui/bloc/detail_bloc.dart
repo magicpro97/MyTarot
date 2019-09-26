@@ -39,7 +39,9 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
   DetailState get initialState => InitialDetailState();
 
   @override
-  Stream<DetailState> mapEventToState(DetailEvent event,) async* {
+  Stream<DetailState> mapEventToState(
+    DetailEvent event,
+  ) async* {
     if (event is OpenNote) {
       yield LoadingState();
       await _getNote(event.tarot.id);
@@ -76,7 +78,7 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
   Future<void> _getNote(String id) async {
     log("Get note by tarot id $id", name: _TAG);
     final docs =
-    await Firestore.instance.collection("tarot").document(id).get();
+        await Firestore.instance.collection("tarot").document(id).get();
     if (docs.exists) {
       _tarot = Tarot.fromJson(docs.data);
       final note = await localDb.noteDao.getNoteByTarotId(_tarot.id);
@@ -102,6 +104,7 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
       await localDb.noteDao.insertNote(NoteTableData(
         tarotId: _tarot.id,
         content: noteContent,
+        userId: '',
         id: Uuid().v1(),
       ));
     }

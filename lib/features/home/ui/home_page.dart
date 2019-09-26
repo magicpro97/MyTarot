@@ -7,6 +7,7 @@ import 'package:my_tarot/features/auth/ui/user_profile.dart';
 import 'package:my_tarot/features/detail/ui/detail_page.dart';
 import 'package:my_tarot/features/home/ui/bloc/home_bloc.dart';
 import 'package:my_tarot/features/home/ui/widgets/card_list.dart';
+import 'package:my_tarot/features/setting/ui/setting_box.dart';
 import 'package:provider/provider.dart';
 
 import 'bloc/bloc.dart';
@@ -21,31 +22,34 @@ class HomePage extends StatelessWidget {
     return DefaultTabController(
       child: BlocBuilder<HomeBloc, HomeState>(
         bloc: homeBloc,
-        builder: (context, state) =>
-            Scaffold(
-              appBar: (state is ShowAppBarState) ||
-                  (state is InitialHomeBlocState)
-                  ? _buildAppBar()
-                  : _hideAppBar(),
-              body: _buildTabView(context),
-              bottomNavigationBar: TabBar(
-                labelColor: selectedLabelColors,
-                unselectedLabelColor: unselectedLabelColor,
-                tabs: <Widget>[
-                  Tab(
-                    icon: Icon(FontAwesomeIcons.creditCard),
-                  ),
-                ],
-                onTap: (index) => homeBloc.dispatch(TabChangeEvent(index)),
+        builder: (context, state) => Scaffold(
+          appBar: (state is ShowAppBarState) || (state is InitialHomeBlocState)
+              ? _buildAppBar()
+              : _hideAppBar(),
+          body: _buildTabView(context),
+          bottomNavigationBar: TabBar(
+            labelColor: selectedLabelColors,
+            unselectedLabelColor: unselectedLabelColor,
+            tabs: <Widget>[
+              Tab(
+                icon: Icon(FontAwesomeIcons.creditCard),
               ),
-              drawer: Drawer(child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  UserProfile(),
-                ],
-              ),),
+            ],
+            onTap: (index) => homeBloc.dispatch(TabChangeEvent(index)),
+          ),
+          drawer: Drawer(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                SizedBox(
+                  height: 24.0,
+                ),
+                UserProfile(),
+                SettingBox(),
+              ],
             ),
+          ),
+        ),
       ),
       length: 1,
     );
@@ -81,8 +85,7 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  Widget _hideAppBar() =>
-      PreferredSize(
+  Widget _hideAppBar() => PreferredSize(
         child: Container(),
         preferredSize: Size.fromHeight(kToolbarHeight),
       );

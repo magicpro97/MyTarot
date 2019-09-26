@@ -14,14 +14,20 @@ class NoteDao extends DatabaseAccessor<MoorDb> with _$NoteDaoMixin {
       (select(noteTable)..where((note) => note.id.equals(id))).watchSingle();
 
   Future<NoteTableData> getNoteByTarotId(String tarotId) =>
-      (select(noteTable)
-        ..where((note) => note.tarotId.equals(tarotId)))
+      (select(noteTable)..where((note) => note.tarotId.equals(tarotId)))
           .getSingle();
 
   Future updateContent(NoteTableData data) =>
-      (update(noteTable)
-        ..where((note) => note.id.equals(data.id)))
+      (update(noteTable)..where((note) => note.id.equals(data.id)))
           .write(NoteTableCompanion(
         content: Value(data.content),
+      ));
+
+  Future<List<NoteTableData>> getNotes() => select(noteTable).get();
+
+  Future updateUserId(String userId) =>
+      (update(noteTable)..where((tbl) => tbl.userId.equals('')))
+          .write(NoteTableCompanion(
+        userId: Value(userId),
       ));
 }

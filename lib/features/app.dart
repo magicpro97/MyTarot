@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_tarot/features/auth/ui/bloc/auth_bloc.dart';
 import 'package:my_tarot/features/detail/ui/bloc/bloc.dart';
 import 'package:my_tarot/features/home/ui/bloc/bloc.dart';
+import 'package:my_tarot/features/setting/ui/bloc/bloc.dart';
 import 'package:my_tarot/features/slash/bloc/slash_bloc.dart';
 import 'package:my_tarot/features/slash/ui/slash_page.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +24,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider.value(
           value: SlashBloc(),
+        ),
+        BlocProvider.value(
+          value: SettingBloc(),
         ),
       ],
       child: MaterialApp(

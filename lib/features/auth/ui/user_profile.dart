@@ -17,7 +17,7 @@ class UserProfile extends StatelessWidget {
     final authBloc = Provider.of<AuthBloc>(context);
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+      // padding: const EdgeInsets.symmetric(horizontal: 8.0),
       child: BlocListener(
         bloc: authBloc,
         listener: (context, listener) => log(listener.toString(), name: _TAG),
@@ -30,10 +30,10 @@ class UserProfile extends StatelessWidget {
               return (state is NotSignInState) || (state is InitialAuthState)
                   ? _buildGSignInButton(context)
                   : state is LoadingState
-                  ? CircularProgressIndicator()
-                  : state is SignInFailState
-                  ? _buildGSignInButtonWithError(context)
-                  : _buildUserProfile(authBloc.user);
+                      ? CircularProgressIndicator()
+                      : state is SignInFailState
+                          ? _buildGSignInButtonWithError(context)
+                          : _buildUserProfile(authBloc.user);
             }),
       ),
     );
@@ -62,15 +62,14 @@ class UserProfile extends StatelessWidget {
     );
   }
 
-  Widget _buildUserProfile(FirebaseUser user) =>
-      UserSummaryInfo(
+  Widget _buildUserProfile(FirebaseUser user) => UserSummaryInfo(
         user: user,
       );
 
   Widget _buildGSignInButtonWithError(BuildContext context) => Column(
-    children: <Widget>[
-      _buildGSignInButton(context),
-      Text("Cannot sign in."),
-    ],
-  );
+        children: <Widget>[
+          _buildGSignInButton(context),
+          Text("Cannot sign in."),
+        ],
+      );
 }
