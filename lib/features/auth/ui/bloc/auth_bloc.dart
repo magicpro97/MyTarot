@@ -26,6 +26,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     AuthEvent event,
   ) async* {
     if (event is CheckingSignInEvent) {
+      updateUser(await Auth.currentUser);
       if (user == null) {
         yield NotSignInState();
       } else {
