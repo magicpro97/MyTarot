@@ -8,6 +8,8 @@ import 'package:get_it/get_it.dart';
 import 'package:my_tarot/data/models/note.dart';
 import 'package:my_tarot/data/models/tarot.dart';
 import 'package:my_tarot/data/repositories/local/moor_db.dart';
+import 'package:my_tarot/data/repositories/remote/firestore_db.dart';
+import 'package:my_tarot/features/auth/auth.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 
@@ -16,6 +18,7 @@ import './bloc.dart';
 class DetailBloc extends Bloc<DetailEvent, DetailState> {
   static const _TAG = "DetailBloc";
   final localDb = GetIt.I<MoorDb>();
+  final remoteDb = GetIt.I<FirestoreDb>();
   final _noteSheetController = BehaviorSubject<bool>.seeded(false);
   final _noteController = BehaviorSubject<String>.seeded("");
   PersistentBottomSheetController _bottomSheetController;
@@ -34,6 +37,13 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
 
   Note _note;
   Tarot _tarot;
+
+  DetailBloc() {
+    localDb.noteDao.watchNotes().listen((tbls) {
+      final notes = tbls.map((tbl) => Note.fromJson(tbl.toJson()));
+      notes.forEach((note) => remoteDb.noteDao.addNote(note));
+    });
+  }
 
   @override
   DetailState get initialState => InitialDetailState();
@@ -104,13 +114,11 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
       await localDb.noteDao.insertNote(NoteTableData(
         tarotId: _tarot.id,
         content: noteContent,
-        userId: '',
+        userId: (await Auth.currentUser).uid ?? '',
         id: Uuid().v1(),
       ));
     }
+    _note = null;
     updateNote("");
-    localDb.noteDao
-        .getNoteByTarotId(_tarot.id)
-        .then((value) => print(value.content));
   }
 }

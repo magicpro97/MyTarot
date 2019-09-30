@@ -10,6 +10,8 @@ class NoteDao extends DatabaseAccessor<MoorDb> with _$NoteDaoMixin {
 
   Future<int> insertNote(NoteTableData data) => into(noteTable).insert(data);
 
+  Stream<List<NoteTableData>> watchNotes() => select(noteTable).watch();
+
   Stream<NoteTableData> watchNote(String id) =>
       (select(noteTable)..where((note) => note.id.equals(id))).watchSingle();
 
