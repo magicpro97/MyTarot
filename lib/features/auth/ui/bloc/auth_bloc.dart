@@ -4,11 +4,15 @@ import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:my_tarot/features/auth/auth.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bloc.dart';
 
+enum User {
+  OLD_ID,
+}
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final BehaviorSubject<FirebaseUser> _userController;
+  BehaviorSubject<FirebaseUser> _userController;
 
   FirebaseUser get user => _userController.value;
 
@@ -16,7 +20,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Function get updateUser => _userController.sink.add;
 
-  AuthBloc() : _userController = BehaviorSubject();
+  AuthBloc() {
+    _userController = BehaviorSubject();
+    SharedPreferences.getInstance().then((prefs) {
+      if (prefs.getString(User.OLD_ID.toString()) != user.uid) {
+        prefs.setString(User.OLD_ID.toString(), user.uid);
+      }
+    });
+  }
 
   @override
   AuthState get initialState => InitialAuthState();
