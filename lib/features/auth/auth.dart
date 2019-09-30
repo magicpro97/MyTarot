@@ -11,6 +11,8 @@ class Auth {
   static Future<FirebaseUser> get currentUser async =>
       await _auth.currentUser();
 
+  static Stream<FirebaseUser> get userStream => _auth.onAuthStateChanged;
+
   static Future<FirebaseUser> signWithGoogleSignIn() async {
     log('Sign In', name: _TAG);
     final user = await currentUser;

@@ -10,7 +10,9 @@ import 'package:my_tarot/data/models/tarot.dart';
 import 'package:my_tarot/data/repositories/local/moor_db.dart';
 import 'package:my_tarot/data/repositories/remote/firestore_db.dart';
 import 'package:my_tarot/features/auth/auth.dart';
+import 'package:my_tarot/features/setting/setting_enum.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 
 import './bloc.dart';
@@ -39,9 +41,21 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
   Tarot _tarot;
 
   DetailBloc() {
-    localDb.noteDao.watchNotes().listen((tbls) {
-      final notes = tbls.map((tbl) => Note.fromJson(tbl.toJson()));
-      notes.forEach((note) => remoteDb.noteDao.addNote(note));
+    Auth.userStream.listen((user) {
+      if (user != null) {
+        localDb.noteDao.watchNotes().listen((tbls) {
+          SharedPreferences.getInstance().then((instant) {
+            if (instant.getBool(Setting.SYNC.toString()) ?? false) {
+              final notes = tbls.map((tbl) => Note.fromJson(tbl.toJson()));
+              notes.forEach((note) {
+                if (note.userId.isNotEmpty) {
+                  remoteDb.noteDao.addNote(note);
+                }
+              });
+            }
+          });
+        });
+      }
     });
   }
 
@@ -111,10 +125,11 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
       await localDb.noteDao.updateContent(NoteTableData.fromJson(temp));
     } else {
       log('Create a new note', name: _TAG);
-      await localDb.noteDao.insertNote(NoteTableData(
+      final user = await Auth.currentUser;
+      localDb.noteDao.insertNote(NoteTableData(
         tarotId: _tarot.id,
         content: noteContent,
-        userId: (await Auth.currentUser).uid ?? '',
+        userId: user != null ? user.uid : '',
         id: Uuid().v1(),
       ));
     }

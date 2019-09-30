@@ -9,7 +9,7 @@ abstract class SettingEvent extends Equatable {
 
 class SettingChangeEvent extends SettingEvent {
   final Setting setting;
-  final dynamic value;
+  final bool value;
 
   SettingChangeEvent(this.setting, this.value);
 }
