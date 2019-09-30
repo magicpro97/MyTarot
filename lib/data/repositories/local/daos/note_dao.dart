@@ -23,9 +23,13 @@ class NoteDao extends DatabaseAccessor<MoorDb> with _$NoteDaoMixin {
       (update(noteTable)..where((note) => note.id.equals(data.id)))
           .write(NoteTableCompanion(
         content: Value(data.content),
+        updatedDate: Value(DateTime.now()),
       ));
 
   Future<List<NoteTableData>> getNotes() => select(noteTable).get();
+
+  Future<NoteTableData> getNote(String id) =>
+      (select(noteTable)..where((note) => note.id.equals(id))).getSingle();
 
   Future updateUserId(String userId) =>
       (update(noteTable)..where((tbl) => tbl.userId.equals('')))

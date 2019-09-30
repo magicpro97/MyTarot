@@ -11,4 +11,9 @@ class NoteDao {
       .collection('notes')
       .document(note.id)
       .updateData(note.toJson());
+
+  Future<QuerySnapshot> getNotesByUserId(String userId) => Firestore.instance
+      .collection('notes')
+      .where('userId', isEqualTo: userId)
+      .getDocuments();
 }

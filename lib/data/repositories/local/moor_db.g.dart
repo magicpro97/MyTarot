@@ -295,13 +295,21 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
   final String tarotId;
   final String userId;
   final String content;
+  final DateTime createdDate;
+  final DateTime updatedDate;
   NoteTableData(
-      {@required this.id, @required this.tarotId, this.userId, this.content});
+      {@required this.id,
+      @required this.tarotId,
+      @required this.userId,
+      this.content,
+      this.createdDate,
+      this.updatedDate});
   factory NoteTableData.fromData(
       Map<String, dynamic> data, GeneratedDatabase db,
       {String prefix}) {
     final effectivePrefix = prefix ?? '';
     final stringType = db.typeSystem.forDartType<String>();
+    final dateTimeType = db.typeSystem.forDartType<DateTime>();
     return NoteTableData(
       id: stringType.mapFromDatabaseResponse(data['${effectivePrefix}id']),
       tarotId: stringType
@@ -310,6 +318,10 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}user_id']),
       content:
           stringType.mapFromDatabaseResponse(data['${effectivePrefix}content']),
+      createdDate: dateTimeType
+          .mapFromDatabaseResponse(data['${effectivePrefix}created_date']),
+      updatedDate: dateTimeType
+          .mapFromDatabaseResponse(data['${effectivePrefix}updated_date']),
     );
   }
   factory NoteTableData.fromJson(Map<String, dynamic> json,
@@ -319,6 +331,8 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
       tarotId: serializer.fromJson<String>(json['tarotId']),
       userId: serializer.fromJson<String>(json['userId']),
       content: serializer.fromJson<String>(json['content']),
+      createdDate: serializer.fromJson<DateTime>(json['createdDate']),
+      updatedDate: serializer.fromJson<DateTime>(json['updatedDate']),
     );
   }
   @override
@@ -329,6 +343,8 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
       'tarotId': serializer.toJson<String>(tarotId),
       'userId': serializer.toJson<String>(userId),
       'content': serializer.toJson<String>(content),
+      'createdDate': serializer.toJson<DateTime>(createdDate),
+      'updatedDate': serializer.toJson<DateTime>(updatedDate),
     };
   }
 
@@ -345,16 +361,29 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
       content: content == null && nullToAbsent
           ? const Value.absent()
           : Value(content),
+      createdDate: createdDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(createdDate),
+      updatedDate: updatedDate == null && nullToAbsent
+          ? const Value.absent()
+          : Value(updatedDate),
     ) as T;
   }
 
   NoteTableData copyWith(
-          {String id, String tarotId, String userId, String content}) =>
+          {String id,
+          String tarotId,
+          String userId,
+          String content,
+          DateTime createdDate,
+          DateTime updatedDate}) =>
       NoteTableData(
         id: id ?? this.id,
         tarotId: tarotId ?? this.tarotId,
         userId: userId ?? this.userId,
         content: content ?? this.content,
+        createdDate: createdDate ?? this.createdDate,
+        updatedDate: updatedDate ?? this.updatedDate,
       );
   @override
   String toString() {
@@ -362,14 +391,22 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
           ..write('id: $id, ')
           ..write('tarotId: $tarotId, ')
           ..write('userId: $userId, ')
-          ..write('content: $content')
+          ..write('content: $content, ')
+          ..write('createdDate: $createdDate, ')
+          ..write('updatedDate: $updatedDate')
           ..write(')'))
         .toString();
   }
 
   @override
-  int get hashCode => $mrjf($mrjc(id.hashCode,
-      $mrjc(tarotId.hashCode, $mrjc(userId.hashCode, content.hashCode))));
+  int get hashCode => $mrjf($mrjc(
+      id.hashCode,
+      $mrjc(
+          tarotId.hashCode,
+          $mrjc(
+              userId.hashCode,
+              $mrjc(content.hashCode,
+                  $mrjc(createdDate.hashCode, updatedDate.hashCode))))));
   @override
   bool operator ==(other) =>
       identical(this, other) ||
@@ -377,7 +414,9 @@ class NoteTableData extends DataClass implements Insertable<NoteTableData> {
           other.id == id &&
           other.tarotId == tarotId &&
           other.userId == userId &&
-          other.content == content);
+          other.content == content &&
+          other.createdDate == createdDate &&
+          other.updatedDate == updatedDate);
 }
 
 class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
@@ -385,22 +424,30 @@ class NoteTableCompanion extends UpdateCompanion<NoteTableData> {
   final Value<String> tarotId;
   final Value<String> userId;
   final Value<String> content;
+  final Value<DateTime> createdDate;
+  final Value<DateTime> updatedDate;
   const NoteTableCompanion({
     this.id = const Value.absent(),
     this.tarotId = const Value.absent(),
     this.userId = const Value.absent(),
     this.content = const Value.absent(),
+    this.createdDate = const Value.absent(),
+    this.updatedDate = const Value.absent(),
   });
   NoteTableCompanion copyWith(
       {Value<String> id,
       Value<String> tarotId,
       Value<String> userId,
-      Value<String> content}) {
+      Value<String> content,
+      Value<DateTime> createdDate,
+      Value<DateTime> updatedDate}) {
     return NoteTableCompanion(
       id: id ?? this.id,
       tarotId: tarotId ?? this.tarotId,
       userId: userId ?? this.userId,
       content: content ?? this.content,
+      createdDate: createdDate ?? this.createdDate,
+      updatedDate: updatedDate ?? this.updatedDate,
     );
   }
 }
@@ -442,7 +489,7 @@ class $NoteTableTable extends NoteTable
     return GeneratedTextColumn(
       'user_id',
       $tableName,
-      true,
+      false,
     );
   }
 
@@ -458,8 +505,31 @@ class $NoteTableTable extends NoteTable
     );
   }
 
+  final VerificationMeta _createdDateMeta =
+      const VerificationMeta('createdDate');
+  GeneratedDateTimeColumn _createdDate;
   @override
-  List<GeneratedColumn> get $columns => [id, tarotId, userId, content];
+  GeneratedDateTimeColumn get createdDate =>
+      _createdDate ??= _constructCreatedDate();
+  GeneratedDateTimeColumn _constructCreatedDate() {
+    return GeneratedDateTimeColumn('created_date', $tableName, true,
+        defaultValue: Constant(DateTime.now()));
+  }
+
+  final VerificationMeta _updatedDateMeta =
+      const VerificationMeta('updatedDate');
+  GeneratedDateTimeColumn _updatedDate;
+  @override
+  GeneratedDateTimeColumn get updatedDate =>
+      _updatedDate ??= _constructUpdatedDate();
+  GeneratedDateTimeColumn _constructUpdatedDate() {
+    return GeneratedDateTimeColumn('updated_date', $tableName, true,
+        defaultValue: Constant(DateTime.now()));
+  }
+
+  @override
+  List<GeneratedColumn> get $columns =>
+      [id, tarotId, userId, content, createdDate, updatedDate];
   @override
   $NoteTableTable get asDslTable => this;
   @override
@@ -493,6 +563,18 @@ class $NoteTableTable extends NoteTable
     } else if (content.isRequired && isInserting) {
       context.missing(_contentMeta);
     }
+    if (d.createdDate.present) {
+      context.handle(_createdDateMeta,
+          createdDate.isAcceptableValue(d.createdDate.value, _createdDateMeta));
+    } else if (createdDate.isRequired && isInserting) {
+      context.missing(_createdDateMeta);
+    }
+    if (d.updatedDate.present) {
+      context.handle(_updatedDateMeta,
+          updatedDate.isAcceptableValue(d.updatedDate.value, _updatedDateMeta));
+    } else if (updatedDate.isRequired && isInserting) {
+      context.missing(_updatedDateMeta);
+    }
     return context;
   }
 
@@ -518,6 +600,14 @@ class $NoteTableTable extends NoteTable
     }
     if (d.content.present) {
       map['content'] = Variable<String, StringType>(d.content.value);
+    }
+    if (d.createdDate.present) {
+      map['created_date'] =
+          Variable<DateTime, DateTimeType>(d.createdDate.value);
+    }
+    if (d.updatedDate.present) {
+      map['updated_date'] =
+          Variable<DateTime, DateTimeType>(d.updatedDate.value);
     }
     return map;
   }

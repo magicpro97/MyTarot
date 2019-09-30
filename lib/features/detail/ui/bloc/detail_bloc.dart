@@ -43,6 +43,7 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
   DetailBloc() {
     Auth.userStream.listen((user) {
       if (user != null) {
+        print(user.toString());
         localDb.noteDao.watchNotes().listen((tbls) {
           SharedPreferences.getInstance().then((instant) {
             if (instant.getBool(Setting.SYNC.toString()) ?? false) {
@@ -108,6 +109,7 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
       final note = await localDb.noteDao.getNoteByTarotId(_tarot.id);
       if (note != null) {
         _note = Note.fromJson(note.toJson());
+        print("${_note.toJson()}");
         updateNote(_note.content);
       } else {
         updateNote("");
@@ -119,8 +121,8 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
 
   Future<void> _saveNote() async {
     if (_note != null) {
-      log('Update $_note', name: _TAG);
       final temp = _note.toJson();
+      log('Update $temp', name: _TAG);
       temp['content'] = noteContent;
       await localDb.noteDao.updateContent(NoteTableData.fromJson(temp));
     } else {

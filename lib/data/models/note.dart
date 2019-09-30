@@ -9,8 +9,10 @@ class Note extends Equatable {
   final String tarotId;
   final String userId;
   final String content;
+  final DateTime createdDate;
+  final DateTime updatedDate;
 
-  Note({this.id, this.tarotId, this.userId, this.content});
+  Note({this.id, this.tarotId, this.userId, this.content, this.createdDate, this.updatedDate});
 
   factory Note.fromJson(Map<String, dynamic> json) => _$NoteFromJson(json);
 

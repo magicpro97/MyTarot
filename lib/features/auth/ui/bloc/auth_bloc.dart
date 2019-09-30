@@ -27,15 +27,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   AuthBloc() {
     _userController = BehaviorSubject();
-    if (user != null) {
-      SharedPreferences.getInstance().then((prefs) {
-        if (prefs.getString(User.OLD_ID.toString()) != user.uid) {
-          prefs.setString(User.OLD_ID.toString(), user.uid);
-        } else {
-          prefs.setString(User.OLD_ID.toString(), '');
-        }
-      });
-    }
   }
 
   @override
