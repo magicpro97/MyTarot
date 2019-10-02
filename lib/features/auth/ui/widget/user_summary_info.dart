@@ -6,11 +6,9 @@ import 'package:my_tarot/features/auth/ui/bloc/auth_bloc.dart';
 import 'package:my_tarot/features/auth/ui/bloc/auth_event.dart';
 import 'package:provider/provider.dart';
 
+import '../../auth.dart';
+
 class UserSummaryInfo extends StatelessWidget {
-  final FirebaseUser user;
-
-  const UserSummaryInfo({Key key, this.user}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -22,24 +20,30 @@ class UserSummaryInfo extends StatelessWidget {
       width: double.infinity,
       padding: EdgeInsets.all(8.0),
       child: Card(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            UserAvatar(user: user),
-            Text(
-              user.displayName,
-              style: displayNameStyle,
-            ),
-            Text(
-              user.email,
-              style: emailStyle,
-            ),
-            FlatButton(
-              onPressed: () => _signOut(context),
-              child: Text("Sign out"),
-            )
-          ],
+        child: FutureBuilder<FirebaseUser>(
+          future: Auth.currentUser,
+          builder: (context, snapshot) =>
+          snapshot.hasData
+              ? Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              UserAvatar(user: snapshot.data),
+              Text(
+                snapshot.data.displayName,
+                style: displayNameStyle,
+              ),
+              Text(
+                snapshot.data.email,
+                style: emailStyle,
+              ),
+              FlatButton(
+                onPressed: () => _signOut(context),
+                child: Text("Sign out"),
+              )
+            ],
+          )
+              : CircularProgressIndicator(),
         ),
       ),
     );

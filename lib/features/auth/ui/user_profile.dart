@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -33,7 +32,7 @@ class UserProfile extends StatelessWidget {
                       ? CircularProgressIndicator()
                       : state is SignInFailState
                           ? _buildGSignInButtonWithError(context)
-                          : _buildUserProfile(authBloc.user);
+                  : _buildUserProfile();
             }),
       ),
     );
@@ -62,9 +61,7 @@ class UserProfile extends StatelessWidget {
     );
   }
 
-  Widget _buildUserProfile(FirebaseUser user) => UserSummaryInfo(
-        user: user,
-      );
+  Widget _buildUserProfile() => UserSummaryInfo();
 
   Widget _buildGSignInButtonWithError(BuildContext context) => Column(
         children: <Widget>[

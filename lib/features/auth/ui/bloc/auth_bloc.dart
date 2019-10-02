@@ -1,12 +1,9 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:my_tarot/data/repositories/local/moor_db.dart';
 import 'package:my_tarot/features/auth/auth.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bloc.dart';
 
@@ -17,27 +14,13 @@ enum User {
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final localDb = GetIt.I<MoorDb>();
 
-  BehaviorSubject<FirebaseUser> _userController;
-
-  FirebaseUser get user => _userController.value;
-
-  Stream<FirebaseUser> get userStream => _userController.stream;
-
-  Function get updateUser => _userController.sink.add;
-
-  AuthBloc() {
-    _userController = BehaviorSubject();
-  }
-
   @override
   AuthState get initialState => InitialAuthState();
 
   @override
-  Stream<AuthState> mapEventToState(
-    AuthEvent event,
-  ) async* {
+  Stream<AuthState> mapEventToState(AuthEvent event,) async* {
     if (event is CheckingSignInEvent) {
-      updateUser(await Auth.currentUser);
+      final user = await Auth.currentUser;
       if (user == null) {
         yield NotSignInState();
       } else {
@@ -45,7 +28,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } else if (event is SignInEvent) {
       yield LoadingState();
-      updateUser(await Auth.signWithGoogleSignIn());
+      final user = await Auth.signWithGoogleSignIn();
       _updateNote();
       if (user == null) {
         yield SignInFailState();
@@ -60,16 +43,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void _signOut() {
     Auth.signOut();
-    updateUser(null);
-  }
-
-  @override
-  void dispose() {
-    _userController.close();
-    super.dispose();
   }
 
   void _updateNote() {
-    localDb.noteDao.updateUserId(user.uid);
+    Auth.currentUser.then((user) => localDb.noteDao.updateUserId(user.uid));
   }
 }

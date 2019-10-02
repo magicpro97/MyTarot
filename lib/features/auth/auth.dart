@@ -8,8 +8,8 @@ class Auth {
 
   static const _TAG = 'Auth';
 
-  static Future<FirebaseUser> get currentUser async =>
-      await _auth.currentUser();
+  static Future<FirebaseUser> get currentUser =>
+      _auth.currentUser();
 
   static Stream<FirebaseUser> get userStream => _auth.onAuthStateChanged;
 
@@ -42,6 +42,7 @@ class Auth {
 
   static Future<void> signOut() async {
     await _auth.signOut();
+    await GoogleAuth.disconnect();
     await GoogleAuth.signOut();
   }
 }
