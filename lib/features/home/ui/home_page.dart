@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:my_tarot/data/models/tarot.dart';
 import 'package:my_tarot/features/auth/ui/user_profile.dart';
 import 'package:my_tarot/features/detail/ui/detail_page.dart';
 import 'package:my_tarot/features/home/ui/bloc/home_bloc.dart';
 import 'package:my_tarot/features/home/ui/widgets/card_list.dart';
 import 'package:my_tarot/features/setting/ui/setting_box.dart';
+import 'package:my_tarot/features/shared/widgets/bottom_bar.dart';
 import 'package:provider/provider.dart';
 
 import 'bloc/bloc.dart';
@@ -16,50 +16,31 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final homeBloc = Provider.of<HomeBloc>(context);
-    final unselectedLabelColor = Colors.black;
-    final selectedLabelColors = Colors.blue;
 
-    return DefaultTabController(
-      child: BlocBuilder<HomeBloc, HomeState>(
-        bloc: homeBloc,
-        builder: (context, state) => Scaffold(
-          appBar: (state is ShowAppBarState) || (state is InitialHomeBlocState)
-              ? _buildAppBar()
-              : _hideAppBar(),
-          body: _buildTabView(context),
-          bottomNavigationBar: TabBar(
-            labelColor: selectedLabelColors,
-            unselectedLabelColor: unselectedLabelColor,
-            tabs: <Widget>[
-              Tab(
-                icon: Icon(FontAwesomeIcons.creditCard),
+    return BlocBuilder<HomeBloc, HomeState>(
+      bloc: homeBloc,
+      builder: (context, state) =>
+          Scaffold(
+            appBar: (state is ShowAppBarState) ||
+                (state is InitialHomeBlocState)
+                ? _buildAppBar()
+                : _hideAppBar(),
+            body: CardList(),
+            bottomNavigationBar: BottomBar(index: 0,),
+            drawer: Drawer(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  SizedBox(
+                    height: 24.0,
+                  ),
+                  UserProfile(),
+                  SettingBox(),
+                ],
               ),
-            ],
-            onTap: (index) => homeBloc.dispatch(TabChangeEvent(index)),
-          ),
-          drawer: Drawer(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                SizedBox(
-                  height: 24.0,
-                ),
-                UserProfile(),
-                SettingBox(),
-              ],
             ),
           ),
-        ),
-      ),
-      length: 1,
     );
-  }
-
-  TabBarView _buildTabView(BuildContext context) {
-    return TabBarView(children: <Widget>[
-      CardList(),
-      //  UserProfile(),
-    ]);
   }
 
   AppBar _buildAppBar() {

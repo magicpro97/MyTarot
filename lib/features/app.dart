@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_tarot/features/auth/ui/bloc/auth_bloc.dart';
 import 'package:my_tarot/features/detail/ui/bloc/bloc.dart';
+import 'package:my_tarot/features/friend/friend_page.dart';
 import 'package:my_tarot/features/home/ui/bloc/bloc.dart';
+import 'package:my_tarot/features/home/ui/home_page.dart';
 import 'package:my_tarot/features/setting/ui/bloc/bloc.dart';
+import 'package:my_tarot/features/shared/page_name_enum.dart';
 import 'package:my_tarot/features/slash/bloc/slash_bloc.dart';
 import 'package:my_tarot/features/slash/ui/slash_page.dart';
 import 'package:provider/provider.dart';
@@ -36,7 +39,13 @@ class App extends StatelessWidget {
             buttonTheme: ButtonThemeData(
               textTheme: ButtonTextTheme.primary,
             )),
-        home: SlashPage(logoUrl: 'assets/icons/tarot.svg'),
+        routes: {
+          PageName.SLASH_PAGE.toString(): (context) =>
+              SlashPage(logoUrl: 'assets/icons/tarot.svg'),
+          PageName.HOME_PAGE.toString(): (context) => HomePage(),
+          PageName.FRIEND_PAGE.toString(): (context) => FriendPage(),
+        },
+        initialRoute: PageName.SLASH_PAGE.toString(),
       ),
     );
   }
