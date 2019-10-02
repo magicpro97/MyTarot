@@ -42,7 +42,7 @@ class Auth {
 
   static Future<void> signOut() async {
     await _auth.signOut();
-    await GoogleAuth.disconnect();
+    //await GoogleAuth.disconnect();
     await GoogleAuth.signOut();
   }
 }

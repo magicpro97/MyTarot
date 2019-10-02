@@ -2,17 +2,16 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:my_tarot/data/models/user.dart';
 import 'package:my_tarot/data/repositories/local/moor_db.dart';
+import 'package:my_tarot/data/repositories/remote/firestore_db.dart';
 import 'package:my_tarot/features/auth/auth.dart';
 
 import 'bloc.dart';
 
-enum User {
-  OLD_ID,
-}
-
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
-  final localDb = GetIt.I<MoorDb>();
+  final _localDb = GetIt.I<MoorDb>();
+  final _remoteDb = GetIt.I<FirestoreDb>();
 
   @override
   AuthState get initialState => InitialAuthState();
@@ -29,10 +28,21 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } else if (event is SignInEvent) {
       yield LoadingState();
       final user = await Auth.signWithGoogleSignIn();
-      _updateNote();
       if (user == null) {
         yield SignInFailState();
       } else {
+        _remoteDb.userDao.getUser(user.uid).then((doc) {
+          if (!doc.exists) {
+            _remoteDb.userDao.addUser(User(
+                id: user.uid,
+                email: user.email,
+                displayName: user.displayName,
+                photoUrl: user.photoUrl,
+                createdDate: DateTime.now()));
+          }
+        });
+        print("Aaaaaaaaa");
+        _updateNote();
         yield AlreadySuccessState(user);
       }
     } else if (event is SignOutEvent) {
@@ -46,6 +56,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   void _updateNote() {
-    Auth.currentUser.then((user) => localDb.noteDao.updateUserId(user.uid));
+    Auth.currentUser.then((user) => _localDb.noteDao.updateUserId(user.uid));
   }
 }

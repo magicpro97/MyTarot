@@ -43,7 +43,7 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
   DetailBloc() {
     Auth.userStream.listen((user) {
       if (user != null) {
-        print(user.toString());
+        log("User has been sign in", name: _TAG);
         localDb.noteDao.watchNotes().listen((tbls) {
           SharedPreferences.getInstance().then((instant) {
             if (instant.getBool(Setting.SYNC.toString()) ?? false) {
