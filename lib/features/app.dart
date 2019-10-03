@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_tarot/features/auth/ui/bloc/auth_bloc.dart';
 import 'package:my_tarot/features/detail/ui/bloc/bloc.dart';
 import 'package:my_tarot/features/friend/friend_page.dart';
+import 'package:my_tarot/features/friend/ui/bloc/bloc.dart';
 import 'package:my_tarot/features/home/ui/bloc/bloc.dart';
 import 'package:my_tarot/features/home/ui/home_page.dart';
 import 'package:my_tarot/features/setting/ui/bloc/bloc.dart';
@@ -30,6 +31,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider.value(
           value: SettingBloc(),
+        ),
+        BlocProvider.value(
+          value: FriendBloc(),
         ),
       ],
       child: MaterialApp(
