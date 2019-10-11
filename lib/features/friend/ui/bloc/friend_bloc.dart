@@ -3,14 +3,23 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:bloc/bloc.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:my_tarot/data/models/message.dart';
+//import 'package:permission_handler/permission_handler.dart';
 
 import './bloc.dart';
 
 class FriendBloc extends Bloc<FriendEvent, FriendState> {
   static const String _TAG = "FriendBloc";
 
-  File file;
+  List<Message> messages = [
+    Message(
+        id: 'aaa',
+        userId: 'aa',
+        content: 'ádasdasdasdas',
+        type: MessageType.TEXT,
+        status: MessageStatus.SENT,
+        createdDate: DateTime.now())
+  ];
 
   @override
   FriendState get initialState => InitialFriendState();
@@ -19,7 +28,7 @@ class FriendBloc extends Bloc<FriendEvent, FriendState> {
   Stream<FriendState> mapEventToState(
     FriendEvent event,
   ) async* {
-    if (event is CheckingImageStoragePermission) {
+    /*if (event is CheckingImageStoragePermission) {
       PermissionStatus permission = await _checkingPermission();
       log(permission.toString(), name: _TAG);
       if (permission == PermissionStatus.denied) {
@@ -33,10 +42,15 @@ class FriendBloc extends Bloc<FriendEvent, FriendState> {
       } else {
         yield PermissionGrantedState();
       }
-    } else if (event is GetImages) {}
+    } else*/
+    //if (event is GetImages) {}
+    if (event is SentMessage) {
+      messages.add(event.message);
+
+    }
   }
 
-  Future<Map<PermissionGroup, PermissionStatus>>
+  /*Future<Map<PermissionGroup, PermissionStatus>>
       _requestImagePermission() async {
     Map<PermissionGroup, PermissionStatus> permissions;
     if (Platform.isIOS) {
@@ -60,5 +74,5 @@ class FriendBloc extends Bloc<FriendEvent, FriendState> {
           .checkPermissionStatus(PermissionGroup.storage);
     }
     return permission;
-  }
+  }*/
 }

@@ -1,11 +1,44 @@
-import 'package:bubble/bubble.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:my_tarot/features/friend/ui/widgets/chat_bar.dart';
+import 'package:my_tarot/features/friend/ui/widgets/message_item.dart';
 
 class MessageBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final messages = [
+      MessageItem(
+        content: "Alo",
+        sendingMessage: true,
+        lastMessage: true,
+      ),
+      MessageItem(
+        content: "Ala",
+        sendingMessage: false,
+        lastMessage: true,
+      ),
+      MessageItem(
+        content: "Are you crazy?",
+        sendingMessage: true,
+        lastMessage: true,
+      ),
+      MessageItem(
+        content: "Yes, why not.",
+        sendingMessage: false,
+        lastMessage: true,
+      ),
+      MessageItem(
+        content: "Are you crazy?",
+        sendingMessage: true,
+        lastMessage: false,
+      ),
+      MessageItem(
+        content: "Are you crazy?",
+        sendingMessage: true,
+        lastMessage: true,
+      ),
+    ];
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Thắng béo"),
@@ -18,24 +51,8 @@ class MessageBox extends StatelessWidget {
           Expanded(
               child: ListView.builder(
             reverse: true,
-            itemBuilder: (context, index) => ListTile(
-              title: Bubble(
-                nip: BubbleNip.rightTop,
-                alignment: Alignment.topRight,
-                child: Text(
-                  "dsadasdsd asdasdasd asdkjas hdasnd á.d ná,dn ,.asnd á,dn á,d ns nsad and .asnd  asdasdas ",
-                  textAlign: TextAlign.start,
-                ),
-              ),
-              subtitle: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  "Tôi",
-                  textAlign: TextAlign.end,
-                ),
-              ),
-            ),
-            itemCount: 1,
+            itemBuilder: (context, index) => messages.reversed.toList()[index],
+            itemCount: messages.length,
           )),
           ChatBar(),
         ],

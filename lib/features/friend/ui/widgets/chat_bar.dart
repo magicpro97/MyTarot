@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:my_tarot/data/models/message.dart';
 import 'package:my_tarot/features/friend/ui/bloc/bloc.dart';
 import 'package:provider/provider.dart';
 
@@ -17,20 +16,14 @@ class ChatBar extends StatefulWidget {
 }
 
 class _ChatBarState extends State<ChatBar> {
-  File image;
-  bool showEmojiBoard;
-
-  @override
-  void initState() {
-    super.initState();
-    showEmojiBoard = false;
-  }
+  List<Asset> assets = [];
+  bool showEmojiBoard = false;
 
   @override
   Widget build(BuildContext context) {
     return BottomAppBar(
       child: Container(
-        height: image != null ? 116.0 : showEmojiBoard ? 350.0 : 48.0,
+        height: showEmojiBoard ? 350.0 : 48.0,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
@@ -74,39 +67,27 @@ class _ChatBarState extends State<ChatBar> {
         children: <Widget>[
           IconButton(
             icon: Icon(
-              Icons.camera,
-            ),
-            onPressed: () {
-              ImagePicker.pickImage(source: ImageSource.camera)
-                  .then((file) => setState(() => image = file));
-            },
-          ),
-          IconButton(
-            icon: Icon(
               Icons.image,
             ),
-            onPressed: () {
-              ImagePicker.pickImage(source: ImageSource.gallery)
-                  .then((file) => setState(() => image = file));
-            },
+            onPressed: loadAssets,
           ),
           IconButton(
             icon: Icon(
               Icons.insert_emoticon,
             ),
-            onPressed: () => setState(() => showEmojiBoard = !showEmojiBoard),
+            onPressed: () => setState(() {
+              showEmojiBoard = !showEmojiBoard;
+            }),
           ),
           Padding(padding: EdgeInsets.only(right: 8.0)),
           Expanded(
-              child: image == null
-                  ? TextField(
-                      decoration: InputDecoration.collapsed(
-                        hintText: "Type here...",
-                      ),
-                      maxLines: 2,
-                      minLines: 1,
-                    )
-                  : _buildImageMessage()),
+              child: TextField(
+            decoration: InputDecoration.collapsed(
+              hintText: "Type here...",
+            ),
+            maxLines: 2,
+            minLines: 1,
+          )),
           IconButton(
             icon: Icon(
               Icons.send,
@@ -118,13 +99,30 @@ class _ChatBarState extends State<ChatBar> {
     );
   }
 
-  Widget _buildImageMessage() {
-    return Padding(
-        padding: EdgeInsets.all(8.0),
-        child: Image.file(
-          image,
-          height: 100,
-          width: 100,
-        ));
+  Future<void> loadAssets() async {
+    setState(() {
+      assets = [];
+    });
+
+    List<Asset> resultList;
+    String error;
+
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 300,
+        enableCamera: true,
+      );
+    } on Exception catch (e) {
+      error = e.toString();
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      assets = resultList;
+    });
   }
 }

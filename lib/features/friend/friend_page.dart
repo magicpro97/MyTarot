@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_tarot/features/friend/friend_search_delegate.dart';
-import 'package:my_tarot/features/friend/ui/widgets/message_list.dart';
+import 'package:my_tarot/features/friend/ui/widgets/message_group_list.dart';
 import 'package:my_tarot/features/shared/widgets/bottom_bar.dart';
 
 class FriendPage extends StatelessWidget {
@@ -8,7 +8,7 @@ class FriendPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildAppBar(context),
-      body: MessageList(),
+      body: MessageGroupList(),
       bottomNavigationBar: BottomBar(
         index: 1,
       ),
