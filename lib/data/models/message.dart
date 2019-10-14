@@ -2,6 +2,8 @@ import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 
+part 'message.g.dart';
+
 enum MessageType {
   TEXT,
   IMAGE,
@@ -18,11 +20,11 @@ class Message extends Equatable {
   final String id;
   final String userId;
   final String content;
- // @JsonKey(defaultValue: MessageType.TEXT)
+  @JsonKey(defaultValue: MessageType.TEXT)
   final MessageType type;
-//  @JsonKey(defaultValue: false)
+  @JsonKey(defaultValue: false)
   final bool isDeleted;
- // @JsonKey(defaultValue: MessageStatus.SENT)
+  @JsonKey(defaultValue: MessageStatus.SENT)
   final MessageStatus status;
   final DateTime createdDate;
 

@@ -32,7 +32,7 @@ class Auth {
           );
           final AuthResult authResult =
           await _auth.signInWithCredential(credential);
-          log('New gg user: ${authResult.user}', name: _TAG);
+          log('New firebase user: ${authResult.user}', name: _TAG);
           return authResult.user;
         }
       }

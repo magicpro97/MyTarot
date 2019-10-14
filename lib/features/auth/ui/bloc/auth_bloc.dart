@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 import 'package:my_tarot/data/models/user.dart';
 import 'package:my_tarot/data/repositories/local/moor_db.dart';
 import 'package:my_tarot/data/repositories/remote/firestore_db.dart';
 import 'package:my_tarot/features/auth/auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'bloc.dart';
 
@@ -41,7 +43,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
                 createdDate: DateTime.now()));
           }
         });
-        print("Aaaaaaaaa");
+        _saveUser(user);
         _updateNote();
         yield AlreadySuccessState(user);
       }
@@ -57,5 +59,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   void _updateNote() {
     Auth.currentUser.then((user) => _localDb.noteDao.updateUserId(user.uid));
+  }
+
+  void _saveUser(FirebaseUser user) {
+    SharedPreferences.getInstance()
+        .then((prefs) => prefs.setString('USER_ID', user.uid));
   }
 }
