@@ -9,7 +9,7 @@
   "author": "magicpro97",
   "license": "ISC",
   "dependencies": {
-    "firebase-admin": "^8.5.0",
-    "firebase-functions": "^3.2.0"
+    "firebase-admin": "^11.4.1",
+    "firebase-functions": "^3.24.1"
   }
 }
